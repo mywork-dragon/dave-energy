@@ -1,0 +1,9 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@hoveredItemBackground: #c0f3a0;
+@itemFontSize: 13px;
+@menuPadding: 10px;
+@selectedBackground: @green;
+@selectedTextColor: @white;

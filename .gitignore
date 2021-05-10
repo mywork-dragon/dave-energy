@@ -1,0 +1,17 @@
+__pycache__/
+venv/
+.pytest_cache/
+.DS_Store
+.ipynb_checkpoints
+.python-version
+.idea/
+.pre-commit-config.yaml
+*.pyc
+*.local
+.vscode
+.mypy_cache/
+node_modules
+yarn-error.log
+localconfig.py
+config.ini
+client/build/

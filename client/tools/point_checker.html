@@ -1,0 +1,167 @@
+<html>
+    <title>Niagara4 Credential</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script type="text/javascript">
+
+            function load_company_dropdown() {
+                $('#company').empty();
+                clear_result();
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/company_id_and_name",
+                    success: function(data){
+                        load_dropdown(data['companies'], 'company');
+                    }
+                });
+            };
+
+            function load_building_dropdown() {
+                $('#building').empty();
+                var dict = {};
+                dict["company_id"] = $("#company").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/buildings_of_company",
+                    data : dict,
+                    success: function(data){
+                        load_dropdown(data['buildings'], 'building');
+                    }
+                });
+            };
+
+            function load_asset_dropdown() {
+                $('#asset').empty();
+                var dict = {};
+                dict["building_id"] = $("#building").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/assets_of_building",
+                    data : dict,
+                    success: function(data){
+                        load_dropdown(data['assets'], 'asset');
+                    }
+                });
+            };
+
+            function load_device_dropdown() {
+                $('#device').empty();
+                var dict = {};
+                dict["asset_id"] = $("#asset").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/devices_of_asset",
+                    data : dict,
+                    success: function(data){
+                        load_dropdown(data['devices'], 'device');
+                    }
+                });
+            };
+
+            function load_dropdown(idAndNames, dropdown_tag_id) {
+                $('#'+dropdown_tag_id).append($("<option value=''>Select</option>"));
+                for (var i = 0; i < idAndNames.length; i++) {
+                    $('#'+dropdown_tag_id).append($("<option></option>").attr("value", idAndNames[i]['id']).text(idAndNames[i]['name'] + '(' + idAndNames[i]['id'] + ')'));
+                }
+            }
+
+            function get_points() {
+                clear_result();
+                var dict = {};
+                dict["asset_id"] = $("#asset").val();
+                dict["device_id"] = $("#device").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/get_points_for_testing",
+                    data : dict,
+                    success: function(data){
+                        if ('points' in data) {
+                            $('#point_list').append("<p>Once you click on any of the Test buttons below, please <b>wait for 5 secs</b> to get the response from the N4 server.</p><br>");
+
+                            points = data['points'];
+                            for (var i = 0; i < points.length; i++) {
+                                $('#point_list').append("<div id='point_id', value='" + points[i]['point_id'] + "'>&nbsp;&nbsp;");
+                                $('#point_list').append("<span>" + points[i]['point_id'] + "</span>&nbsp;&nbsp;");
+                                $('#point_list').append("<span><b>" + points[i]['point_name'] + "</b></span>&nbsp;&nbsp;");
+                                $('#point_list').append("<span>" + points[i]['point_path'] + "</span>&nbsp;&nbsp;");
+                                $('#point_list').append("<button id='test_point' type='button' onclick='test_point(\"" + points[i]['point_path'] + "\")' class='ml-2 btn btn-outline-primary' >Test</button>&nbsp;&nbsp;");
+                                $('#point_list').append("</div>");
+                            }
+                        }
+                        else {
+                            $('#point_list').append("Points are not present for these filters.");
+                        }
+                    }
+                });
+            }
+
+            function test_point(point_path) {
+                var dict = {};
+                dict["building_id"] = $("#building").val();
+                dict["point_path"] = point_path;
+
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/test_point_read",
+                    data : dict,
+                    success: function(data){
+                        alert(data);
+                    }
+                });
+
+            }
+
+            function clear_result() {
+                $('#point_list').empty();
+            };
+
+        </script>
+
+
+    <body onload="load_company_dropdown()">
+        <br><br>
+        <div>
+            <label class='ml-2'>Company:</label>
+            <select id="company" onchange="javascript:load_building_dropdown();clear_result();" style="height: 39px;">
+                <option value="">Select</option>
+            </select>
+
+            <br><br>
+            <label class='ml-2'>Building:</label>
+            <select id="building" onchange="javascript:load_asset_dropdown();clear_result();" style="height: 39px;">
+                <option value="">Select</option>
+            </select>
+
+            <br><br>
+            <label class='ml-2'>Asset:</label>
+            <select id="asset" onchange="javascript:load_device_dropdown();clear_result();" style="height: 39px;">
+                <option value="">Select</option>
+            </select>
+
+            <br><br>
+            <label class='ml-2'>Device:</label>
+            <select id="device" onchange="javascript:clear_result();" style="height: 39px;">
+                <option value="">Select</option>
+            </select>
+
+            <br><br>
+            <button id="submit" type="button" onclick="get_points()" class="ml-2 btn btn-outline-primary">Submit</button>
+
+            <br>
+            <hr/>
+        </div>
+
+        <div id='point_list'>
+        </div>
+
+    </body>
+</html>

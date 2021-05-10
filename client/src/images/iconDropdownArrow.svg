@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="6px" viewBox="0 0 10 6" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-dropdown-arrow</title>
+    <g id="icon-dropdown-arrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="→" fill="#575E68" fill-rule="nonzero" transform="translate(5.000000, 3.000000) rotate(-270.000000) translate(-5.000000, -3.000000) " points="2.99145299 8 8 2.99142367 2.99145299 -2 2 -1.02229846 6.07699456 3 2 7.0051458"></polygon>
+    </g>
+</svg>

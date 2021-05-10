@@ -1,0 +1,5 @@
+coverage
+build/favicon.png
+build/fonts
+build/static
+webpack-bundle-stats.json

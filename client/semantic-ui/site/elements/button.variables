@@ -1,0 +1,6 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@basicBorderSize: 0;
+@basicColoredBorderSize: 0;

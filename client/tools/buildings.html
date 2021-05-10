@@ -1,0 +1,338 @@
+<html>
+    <head>
+        <title>Buildings</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="js/buildings.js"></script>
+    </head>
+    <body onload="load_company_dropdown()">
+        <br><br>
+        <div>
+            <label class='ml-2'>Company:</label>
+            <select id="company" onchange="javascript:read_buildings()" style="height: 39px;">
+                <option value="">Select</option>
+            </select>
+            &nbsp;&nbsp;<button id="company_submit" type="button" onclick="read_buildings()" class="ml-2 btn btn-outline-primary">Submit</button>
+            <br><br>
+
+            <button id="add_building" type="button" onclick="clear_building_modal();$('#save_building_modal').find('.modal-title').text('Add building');" class="ml-2 btn btn-outline-primary" data-toggle="modal" data-target="#save_building_modal">Add Building</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button id="add_asset" type="button" onclick="clear_asset_modal();load_asset_type_dropdown('save_asset_asset_type_id');$('#save_asset_modal').find('.modal-title').text('Add asset')" class="btn btn-outline-primary" data-toggle="modal" data-target="#save_asset_modal">Add Asset</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button id="add_device" type="button" onclick="clear_device_modal();$('#save_point_modal').find('.modal-title').text('Add device');" class="btn btn-outline-primary" data-toggle="modal" data-target="#save_device_modal">Add Device</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button id="add_point" type="button"  onclick="clear_point_modal();load_unit_dropdown('save_point_unit');$('#save_point_modal').find('.modal-title').text('Add point');" class="btn btn-outline-primary" data-toggle="modal" data-target="#save_point_modal">Add Point</button>
+            <br>
+            <hr/>
+        </div>
+
+        <div class='container-fluid' id='building_results'>
+        </div>
+
+        <div class="modal" id="save_building_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add Building</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form id="save_building_form" action="/tools/save_building" method="post">
+
+                            <div class="form-group">
+                                <input name="building_id" id="save_building_building_id" type=hidden value="">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" id="save_building_company_id" name="company_id" value="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="building_name">Building Name:</label>
+                                <input type="text" class="form-control" id="save_building_building_name" name="building_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address:</label>
+                                <input type="text" class="form-control" id="save_building_address" name="address" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="zipcode">Zipcode:</label>
+                                <input type="text" class="form-control" id="save_building_zipcode" name="zipcode" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="service_address">Service Address:</label>
+                                <input type="text" class="form-control" id="save_building_service_address" name="service_address" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sq_footage">Sq. Footage:</label>
+                                <input type="text" class="form-control" id="save_building_sq_footage" name="sq_footage" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="occupancy">Occupancy:</label>
+                                <input type="text" class="form-control" id="save_building_occupancy" name="occupancy" required>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="save_building_consumes_gas" name="consumes_gas"> Consumes Gas
+                                </label>
+                            </div>
+
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="save_building_consumes_steam" name="consumes_steam"> Consumes Steam
+                                </label>
+                            </div>
+
+                            <div>
+                                <p id="save_building_submit_error" style="color:red"></p>
+                            </div>
+
+                            <button type="button" onclick="save_building_submit_form()" id="save_building_submit" name="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="save_asset_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                    <h4 class="modal-title">Add Asset</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form id="save_asset_form" action="/tools/save_asset" method="post">
+
+                            <div class="form-group">
+                                <input name="save_asset_asset_id" id="save_asset_asset_id" type="hidden" value="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="building">Building:</label>
+                                <select name="save_asset_building_id" id="save_asset_building_id">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" id="save_asset_asset_name" name="save_asset_asset_name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="asset_type_id">Asset Type:</label>
+                                <select name="save_asset_asset_type_id" id="save_asset_asset_type_id">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="energy_type">Energy Type:</label>
+                                <select name="save_asset_energy_type" id="save_asset_energy_type">
+                                    <option value="">Select</option>
+                                    <option value="electric">electric</option>
+                                    <option value="steam">steam</option>
+                                </select>
+                            </div>
+
+                            <button type="button" onclick="save_asset_submit_form()" id="save_asset_submit" name="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="save_device_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add Device</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form id="save_device_form" action="/tools/save_device" method="post">
+
+                            <div class="form-group">
+                                <input name="save_device_device_id" id="save_device_device_id" type=hidden val="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="building">Building:</label>
+                                <select name="save_device_building_id" id="save_device_building_id" onchange="javascript:load_asset_dropdown('save_device_building_id', 'save_device_asset_id')">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="asset">Asset:</label>
+                                <select name="save_device_asset_id" id="save_device_asset_id">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" id="save_device_name" name="save_device_name" required>
+                            </div>
+
+                            <button type="button" onclick="save_device_submit_form()" id="save_device_submit" name="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+          <div class="modal" id="save_point_modal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Save Point</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="save_point_form" action="/tools/save_point" method="post">
+
+                        <div class="form-group">
+                            <input name="save_point_point_id" id="save_point_point_id" type=hidden value="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="building">Building:</label>
+                            <select name="save_point_building_id" id="save_point_building_id" onchange="javascript:load_asset_dropdown('save_point_building_id', 'save_point_asset_id')">
+                                <option value="">Select</option>
+                              </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="asset">Asset:</label>
+                            <select name="save_point_asset_id" id="save_point_asset_id" onchange="javascript:load_device_dropdown('save_point_asset_id', 'save_point_device_id')">
+                                <option value="">Select</option>
+                              </select>
+                        </div>
+
+                        <div>OR</div>
+
+                        <div class="form-group">
+                            <label for="device">Device:</label>
+                            <select name="save_point_device_id" id="save_point_device_id">
+                                <option value="">Select</option>
+                              </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" class="form-control" id="save_point_name" name="save_point_name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="path">Path:</label>
+                            <input type="text" class="form-control" id="save_point_path" name="save_point_path" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="unit">Unit:</label>
+                            <select name="save_point_unit" id="save_point_unit">
+                                <option value="">Select</option>
+                              </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="save_point_tag">Tag:</label>
+                            <select name="save_point_tag" id="save_point_tag">
+                                <option value="">Select</option>
+                                <option value="REAL_TIME_REDUCTION">REAL_TIME_REDUCTION</option>
+                                <option value="OVERRIDE_SETPOINT">OVERRIDE_SETPOINT</option>
+                                <option value="EVENT_ENABLE">EVENT_ENABLE</option>
+                                <option value="TARGET_REDUCTION">TARGET_REDUCTION</option>
+                                <option value="DEFAULT_SETPOINT">DEFAULT_SETPOINT</option>
+                                <option value="EVENT_TYPE">EVENT_TYPE</option>
+                                <option value="EVENT_SETPOINT">EVENT_SETPOINT</option>
+                                <option value="METER_EXPORT">METER_EXPORT</option>
+                                <option value="METER">METER</option>
+                              </select>
+                        </div>
+
+                        <div>
+                            <p id="save_point_submit_error" style="color:red"></p>
+                        </div>
+
+                        <button type="button" onclick="save_point_submit_form()" id="save_point_submit" name="submit" class="btn btn-primary">Submit</button>
+                      </form>
+                </div>
+
+              </div>
+            </div>
+        </div>
+
+        <div class="modal" id="test_point_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title"></h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div>
+                        <p id="test_point_modal_text"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="building_go_live_check_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title"></h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div>
+                        <p id="building_go_live_check_modal_text"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+    <script>
+        $("#save_building_modal").on('hidden.bs.modal', function () {
+            document.getElementById('save_building_submit_error').innerHTML = "";
+        });
+        $("#save_point_modal").on('hidden.bs.modal', function () {
+            $('#save_point_building_id').prop('disabled', false);
+            $('#save_point_asset_id').prop('disabled', false);
+            $('#save_point_device_id').prop('disabled', false);
+            document.getElementById('save_point_submit_error').innerHTML = "";
+        });
+
+        $("#save_device_modal").on('hidden.bs.modal', function () {
+            $('#save_device_building_id').prop('disabled', false);
+            $('#save_device_asset_id').prop('disabled', false);
+        });
+
+        $("#save_asset_modal").on('hidden.bs.modal', function () {
+            $('#save_asset_building_id').prop('disabled', false);
+        });
+    </script>
+</html>

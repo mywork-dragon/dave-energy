@@ -1,0 +1,23 @@
+*/15 * * * * FLASK_ENV=scheduled_jobs PYTHONPATH=$PYTHONPATH:/home/ubuntu/dev/dave-energy /usr/bin/python3 /home/ubuntu/dev/dave-energy/scheduled_jobs/solar_edge/run.py
+
+2,5,8,17,20,23,32,35,38,47,50,53 * * * * FLASK_ENV=scheduled_jobs PYTHONPATH=$PYTHONPATH:/home/ubuntu/dev/dave-energy /usr/bin/python3 /home/ubuntu/dev/dave-energy/scheduled_jobs/niagara4/run_read_meter_points.py
+
+* * * * * FLASK_ENV=scheduled_jobs PYTHONPATH=$PYTHONPATH:/home/ubuntu/dev/dave-energy /usr/bin/python3 /home/ubuntu/dev/dave-energy/scheduled_jobs/niagara4/run_read_active_event_points.py
+
+50 * * * * FLASK_ENV=scheduled_jobs DAVE_ENERGY_HOME=/home/ubuntu/dev PYTHONPATH=$PYTHONPATH:/home/ubuntu/dev/dave-energy /usr/bin/python3 /home/ubuntu/dev/dave-energy/scheduled_jobs/dnv/meter_feeder.py
+
+5 * * * * FLASK_ENV=scheduled_jobs PYTHONPATH=$PYTHONPATH:/home/ubuntu/dev/dave-energy /usr/bin/python3 /home/ubuntu/dev/dave-energy/scheduled_jobs/dnv/read_forecasts.py
+
+* * * * * FLASK_ENV=production PYTHONPATH=$PYTHONPATH:/home/ubuntu/dev/dave-energy /usr/bin/python3 /home/ubuntu/dev/dave-energy/scheduled_jobs/billing_peak_change_detector/run.py
+
+# Read Trulight morning energy curves
+0 10 * * 1-5 FLASK_ENV=scheduled_jobs PYTHONPATH=$PYTHONPATH:/home/ubuntu/dev/dave-energy /usr/bin/python3 /home/ubuntu/dev/dave-energy/scheduled_jobs/trulight_energy/forward_curves/read_forward_morning.$
+
+# Read Trulight morning energy curves
+0 17 * * 1-5 FLASK_ENV=scheduled_jobs PYTHONPATH=$PYTHONPATH:/home/ubuntu/dev/dave-energy /usr/bin/python3 /home/ubuntu/dev/dave-energy/scheduled_jobs/trulight_energy/forward_curves/read_forward_cob.py
+
+# Read Trulight capacity curves
+0 1 * * 1-5 FLASK_ENV=scheduled_jobs PYTHONPATH=$PYTHONPATH:/home/ubuntu/dev/dave-energy /usr/bin/python3 /home/ubuntu/dev/dave-energy/scheduled_jobs/trulight_energy/capacity_curves/read_capacity.py
+
+# DCM events for tomorrow based on DNV forecasts
+0 23 * * * FLASK_ENV=scheduled_jobs PYTHONPATH=$PYTHONPATH:/home/ubuntu/dev/dave-energy /usr/bin/python3 /home/ubuntu/dev/dave-energy/scheduled_jobs/niagara4/events/run_check_dcm_for_tomorrow.py

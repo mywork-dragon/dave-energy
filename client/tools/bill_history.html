@@ -1,0 +1,244 @@
+<html>
+    <title>Bill History</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script type="text/javascript">
+
+            $(document).ready(function(){
+                var from_date_input=$('input[name="add_bill_from_dt"]');
+                var to_date_input=$('input[name="add_bill_to_dt"]');
+                var container="body";
+                var options={
+                    format: 'mm/dd/yyyy',
+                    container: container,
+                    todayHighlight: true,
+                    autoclose: true,
+                };
+                from_date_input.datepicker(options);
+                to_date_input.datepicker(options);
+            });
+
+            function load_company_dropdown() {
+                disable_add_buttons(true);
+                $('#company').empty();
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/company_id_and_name",
+                    success: function(data){
+                        idAndNames = data['companies'];
+                        $('#company').append($("<option value=''>Select</option>"));
+                        for (var i = 0; i < idAndNames.length; i++) {
+                            $('#company').append($("<option></option>").attr("value", idAndNames[i]['id']).text(idAndNames[i]['name'] + '(' + idAndNames[i]['id'] + ')'));
+                        }
+                    }
+                });
+            };
+
+            function load_building_dropdown() {
+                $('#building').empty();
+                var dict = {};
+                dict["company_id"] = $("#company").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/buildings_of_company",
+                    data : dict,
+                    success: function(data){
+                        idAndNames = data['buildings'];
+                        $('#building').append($("<option value=''>Select</option>"));
+                        for (var i = 0; i < idAndNames.length; i++) {
+                            $('#building').append($("<option></option>").attr("value", idAndNames[i]['id']).text(idAndNames[i]['name'] + '(' + idAndNames[i]['id'] + ')'));
+                        }
+                    }
+                });
+            };
+
+            function read_bills() {
+                $('#bill_history_results').empty();
+
+                var dict = {};
+                dict["building_id"] = $("#building").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/get_bills",
+                    data : dict,
+                    success: function(data){
+                        bills = data['bills'];
+                        if (bills.length > 0) {
+                          $('#bill_history_results').append("<br><div class='row-fluid'>" +
+                            "<span class='col-xl-1'><b>Id</b></span>" +
+                            "<span class='col-xl-2'><b>Usage</b></span>" +
+                            "<span class='col-xl-2'><b>Type</b></span>" +
+                            "<span class='col-xl-2'><b>Amount</b></span>" +
+                            "<span class='col-xl-2'><b>From</b></span>" +
+                            "<span class='col-xl-1'><b>To</b></span>" +
+                            "</div>"
+                          );
+                        }
+
+                        for (var i = 0; i < bills.length; i++) {
+                          var bill_id = bills[i]['id'];
+                          var bill = "<div>" +
+                            "<span class='col-xl-1'>" + bill_id + "</span>" +
+                            "<span class='col-xl-2'>" + bills[i]['usage'] + "</span>" +
+                            "<span class='col-xl-2'>" + bills[i]['bill_type'] + "</span>" +
+                            "<span class='col-xl-2'>" + bills[i]['bill_amount'] + "</span>" +
+                            "<span class='col-xl-2'>" + bills[i]['from_dt'] + "</span>" +
+                            "<span class='col-xl-1'>" + bills[i]['to_dt'] + "</span>" +
+                            "<span class='col-xl-1'><i class='material-icons' onclick='event.stopPropagation();delete_bill(" + bill_id + "); read_bills();'>delete</i></span>" +
+                            "</div>";
+                          $('#bill_history_results').append(bill);
+                        }
+                    }
+                });
+            };
+
+            function add_bill_submit_form() {
+                $('#add_bill_modal').modal('hide');
+
+                $.post('/tools/add_bill',
+                    $('#add_bill_form').serialize(),
+                    function(data, status, xhr){
+                        alert(data);
+                        read_bills();
+                    });
+
+                // Clear fields
+                $('#add_bill_building_id').val("");
+                $('#add_bill_usage').val("");
+                $("#add_bill_type").val($("#add_bill_type option:first").val());
+                $('#add_bill_amount').val("");
+                $('#add_bill_from_dt').val("");
+                $('#add_bill_to_dt').val("");
+            };
+
+            function delete_bill(bill_id) {
+                var resp = confirm("Are you sure you want to delete bill: " + bill_id + "?");
+                if (resp == true) {
+                    var dict = {};
+                    dict['bill_id'] = bill_id;
+
+                    $.ajax({
+                        type: "POST",
+                        url: '/tools/delete_bill',
+                        data : dict,
+                        success: function(data){
+                            alert(data);
+                        },
+                        async: false
+                    });
+                }
+            };
+
+            function change_usage_state() {
+                bill_type = $('#add_bill_type').find(":selected").val();
+                if (bill_type != '' && bill_type != 'electric') {
+                    $("#add_bill_usage").prop("readonly", false);
+                }
+                else {
+                    $("#add_bill_usage").prop("readonly", true);
+                }
+            }
+
+            function set_building_id(tag_id_to_set, tag_id_val_to_read) {
+                $('#'+tag_id_to_set).empty();
+                $('#'+tag_id_to_set).attr('value', $("#"+tag_id_val_to_read).val());
+            };
+
+            function disable_add_buttons(state_val) {
+                $('#submit').prop('disabled', state_val);
+                $('#add_bill').prop('disabled', state_val);
+            }
+
+        </script>
+
+
+    <body onload="load_company_dropdown()">
+        <br><br>
+        <div>
+            <label class='ml-2'>Company:</label>
+            <select id="company" onchange="javascript:load_building_dropdown()" style="height: 39px;">
+                <option value="">Select</option>
+            </select>
+            <br><br>
+            <label class='ml-2'>Building:</label>
+            <select id="building" onchange="javascript:disable_add_buttons(false);" style="height: 39px;">
+                <option value="">Select</option>
+            </select>
+
+            &nbsp;&nbsp;<button id="submit" type="button" onclick="read_bills()" class="ml-2 btn btn-outline-primary">Submit</button>
+
+            <br><br>
+            <button id="add_bill" type="button" onclick="set_building_id('add_bill_building_id', 'building');" class="ml-2 btn btn-outline-primary" data-toggle="modal" data-target="#add_bill_modal">Add Bill</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <br>
+            <hr/>
+        </div>
+
+        <div id='bill_history_results'>
+        </div>
+
+        <div class="modal" id="add_bill_modal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Add Bill</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="add_bill_form" action="/tools/add_bill" method="post">
+
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="add_bill_building_id" name="add_bill_building_id" value="">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="add_bill_type">Type:</label>
+                            <select name="add_bill_type" id="add_bill_type" onchange="change_usage_state()">
+                                <option value="">Select</option>
+                                <option value="gas">Gas</option>
+                                <option value="steam">Steam</option>
+                                <option value="electric">Electric Supply Charges</option>
+                                <option value="fuel oil">Fuel Oil</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="device">Usage:</label>
+                            <input type="text" class="form-control" id="add_bill_usage" name="add_bill_usage" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Amount:</label>
+                            <input type="text" class="form-control" id="add_bill_amount" name="add_bill_amount" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="path">From:</label>
+                            <input type="text" class="form-control" id="add_bill_from_dt" name="add_bill_from_dt" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="path">To:</label>
+                            <input type="text" class="form-control" id="add_bill_to_dt" name="add_bill_to_dt" required>
+                        </div>
+
+                        <button type="button" onclick="add_bill_submit_form()" id="add_bill_submit" name="submit" class="btn btn-primary">Submit</button>
+                      </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+    </body>
+</html>

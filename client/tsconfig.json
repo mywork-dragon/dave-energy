@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "esnext",
+    "jsx": "react",
+    "moduleResolution": "node",
+    "strict": true,
+    "noEmit": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "baseUrl": "src",
+    "paths": {
+      "api": ["api"],
+      "components": ["components"],
+      "models": ["models"],
+      "pages": ["pages"],
+      "routes": ["routes"],
+      "store": ["store"],
+      "stubs": ["stubs"],
+      "types": ["types"],
+      "utils": ["utils"]
+    }
+  },
+  "include": ["src", "setupTests.js", "jest.config.js"]
+}

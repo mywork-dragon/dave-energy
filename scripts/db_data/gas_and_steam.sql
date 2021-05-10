@@ -1,0 +1,52 @@
+
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3104E31St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3151LexingtonAve';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3105LexingtonAve';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3128E85St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3157E85St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3169E91St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3225E85St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3228E85St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3312E92St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3317E91St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3321E91St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3317E85St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3434E84St';
+update buildings set consumes_gas = false, consumes_steam = false where name = 'S.~3334E74St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3421E76St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3427E76St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3662Ave';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~370E12St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3171E89St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~31743FirstAve';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3211-213E73St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3241E86St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3254E10St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3320E9St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3321W54St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3327E34St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3359E62St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3401E77St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3440E88St';
+update buildings set consumes_gas = false, consumes_steam = false where name = 'S.~3444E88St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3516E86St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~374IrvingPlace';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~394E4St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3404East80St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3425East77St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3245East84St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3775Ave';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3353East78St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3423 East 90th St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3311NorthSt';
+
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~38W40St';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3110E59St';
+update buildings set consumes_gas = true, consumes_steam = true where name = 'S.~3199WaterSt';
+update buildings set consumes_gas = true, consumes_steam = true where name = 'S.~3485MadisonAve';
+update buildings set consumes_gas = false, consumes_steam = true where name = 'S.~38803Ave';
+
+
+update buildings set consumes_gas = false, consumes_steam = true where name = 'S.~31430Broadway';
+update buildings set consumes_gas = false, consumes_steam = true where name = 'S.~3575MadisonAve';
+update buildings set consumes_gas = true, consumes_steam = false where name = 'S.~3228E58St';

@@ -1,0 +1,1 @@
+export { EnergyAllocation } from './EnergyAllocation';

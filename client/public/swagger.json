@@ -1,0 +1,3234 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "david energy",
+    "version": "1.0.0",
+    "title": "dave-energy"
+  },
+  "servers": [
+    {
+      "url": "https://david-energy-staging.herokuapp.com"
+    },
+    {
+      "url": "http://127.0.0.1:5000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User login, register etc."
+    },
+    {
+      "name": "Building",
+      "description": "get building details"
+    },
+    {
+      "name": "Device",
+      "description": "get Device related dispatches & point details"
+    },
+    {
+      "name": "Algorithm",
+      "description": "algorithm-dcm"
+    },
+    {
+      "name": "Dispatch",
+      "description": "Get all the dispatch event exist"
+    },
+    {
+      "name": "Point",
+      "description": "Point is associated to device & each point can have history associated with it."
+    },
+    {
+      "name": "Utility",
+      "description": "Get building utility."
+    },
+    {
+      "name": "Niagara4",
+      "description": "Niagara4 routes"
+    },
+    {
+      "name": "Weather",
+      "description": "Get weather information."
+    }
+  ],
+  "paths": {
+    "/buildings": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get all the buildings",
+        "description": "Returns all the buildings for the current user. if user has a company - return company buildings\n    if user is admin - return all buildings (used mostly for development purposes right now)    \n    if a user is associated with a building, return that building",
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/building"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/energy-star-rating": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building energy star rating. NOTE: Log-in required",
+        "description": "Returns all the buildings energy star rating associated with the building",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "year",
+            "in": "path",
+            "description": "pass year (int, optional): year=2019",
+            "schema": {
+              "type": "integer",
+              "example": 2019
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/building-energy-star-rating"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/energy-demand": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building energy demand",
+        "description": "Devices information for a particular building.",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "energy_type",
+            "in": "query",
+            "description": "pass energy type like electric, steam, and gas etc.",
+            "schema": {
+              "type": "string",
+              "example": "electric"
+            }
+          },
+          {
+            "name": "from_time",
+            "in": "query",
+            "description": "pass from_time",
+            "schema": {
+              "type": "string",
+              "example": "2020-04-24T00:00:00.000000"
+            }
+          },
+          {
+            "name": "to_time",
+            "in": "query",
+            "description": "pass to_time",
+            "schema": {
+              "type": "string",
+              "example": "2020-05-11T00:00:00.000000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/energy-demand"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/utilities": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building utilities",
+        "description": "Get building utilities",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/utilities"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/devices": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building devices",
+        "description": "Get building devices information as well as point connected to this devices",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/devices"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/event-scheduler": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building event",
+        "description": "dict: Events for a particular building.",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "from_time",
+            "in": "query",
+            "description": "pass from_time (datetime, optional): from_time=2020-04-24T00:00:00.000000 ",
+            "schema": {
+              "type": "string",
+              "example": "2020-04-24T00:00:00.000000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/dispatch"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/energy-allocation": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building energy allocation",
+        "description": "",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "from_time",
+            "in": "query",
+            "description": "pass from_time (datetime, optional): from_time=2020-04-24T00:00:00.000000 ",
+            "schema": {
+              "type": "string",
+              "example": "2020-04-24T00:00:00.000000"
+            }
+          },
+          {
+            "name": "to_time",
+            "in": "query",
+            "description": "pass to_time (datetime, optional): to_time=2020-04-25T00:00:00.000000 ",
+            "schema": {
+              "type": "string",
+              "example": "2020-04-25T00:00:00.000000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/energy-allocation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/billing-cycle": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building billing-cycle",
+        "description": "",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "from_time",
+            "in": "query",
+            "description": "pass from_time (datetime, optional): from_time=2020-04-24T00:00:00.000000 ",
+            "schema": {
+              "type": "string",
+              "example": "2020-04-24T00:00:00.000000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                    "$ref": "#/components/schemas/billing-cycle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/billing-information": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building billing-information",
+        "description": "",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "from_time",
+            "in": "query",
+            "description": "pass from_time (datetime, optional): from_time=2020-04-24T00:00:00.000000 ",
+            "schema": {
+              "type": "string",
+              "example": "2020-04-24T00:00:00.000000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                    "$ref": "#/components/schemas/billing-information"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/annual-energy-demand": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building annual-energy-demand",
+        "description": "",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "pass year (int, optional): year=2020 ",
+            "schema": {
+              "type": "integer",
+              "example": "2020"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/annual-energy-demand"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/annual-energy-consumption": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building annual-energy-consumption",
+        "description": "",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "pass year (int, optional): year=2020 ",
+            "schema": {
+              "type": "integer",
+              "example": "2020"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/annual-energy-consumption"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/assets": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building assets detail",
+        "description": "",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "billing_cycle",
+            "in": "query",
+            "description": "billing_cycle (int, optional) ",
+            "schema": {
+              "type": "integer",
+              "example": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/assets"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/greenhouse-gas-emissions": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building greenhouse-gas-emissions",
+        "description": "",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "year (int, optional): year=2020 ",
+            "schema": {
+              "type": "integer",
+              "example": "2020"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/greenhouse-gas-emissions"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/assets/{asset_name}": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Get building assets detail for specific assets. NOTE: Log-in required",
+        "description": "",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "asset_name",
+            "in": "path",
+            "description": "asset_name like SOLAR, HVAC, etc. ",
+            "schema": {
+              "type": "string",
+              "example": "HVAC"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/assets_detail"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/energy-consumption/compare": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Compare energy consumption for building by year specified in query. NOTE: Log-in required",
+        "description": "",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "year1",
+            "in": "query",
+            "description": "year1=2019",
+            "schema": {
+              "type": "integer",
+              "example": "2019"
+            }
+          },
+          {
+            "name": "year2",
+            "in": "query",
+            "description": "year2=2020 ",
+            "schema": {
+              "type": "integer",
+              "example": "2020"
+            }
+          }
+
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                    "$ref": "#/components/schemas/compare-energy-consumption"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/building/{building_id}/energy-demand/compare": {
+      "get": {
+        "tags": [
+          "Building"
+        ],
+        "summary": "Compare energy demand for building by year specified in query. NOTE: Log-in required",
+        "description": "",
+        "parameters": [
+          {
+            "name": "building_id",
+            "in": "path",
+            "description": "pass building_id",
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          },
+          {
+            "name": "year1",
+            "in": "query",
+            "description": "year1=2019",
+            "schema": {
+              "type": "integer",
+              "example": "2019"
+            }
+          },
+          {
+            "name": "year2",
+            "in": "query",
+            "description": "year2=2020 ",
+            "schema": {
+              "type": "integer",
+              "example": "2020"
+            }
+          }
+
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                    "$ref": "#/components/schemas/compare-demand-consumption"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/device/{device_id}/dispatch": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "Get device dispatch. NOTE: Log-in required",
+        "description": "",
+        "parameters": [
+          {
+            "name": "device_id",
+            "in": "path",
+            "description": "pass device_id",
+            "schema": {
+              "type": "integer",
+              "example": 160
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/device_dispatch"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/device/{device_id}/points": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "Get all points associated with the device",
+        "description": "",
+        "parameters": [
+          {
+            "name": "device_id",
+            "in": "path",
+            "description": "pass device_id",
+            "schema": {
+              "type": "integer",
+              "example": 160
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/device_points"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/utilities": {
+      "get": {
+        "tags": [
+          "Utility"
+        ],
+        "summary": "Get buildings utilities associated with logged in user",
+        "description": "Get building utilities",
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/utilities"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/dispatch": {
+      "get": {
+        "tags": [
+          "Dispatch"
+        ],
+        "summary": "Get all dispatch available. NOTE: Log-in required",
+        "description": "",
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/dispatch"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Dispatch"
+        ],
+        "summary": "Get all dispatch available. NOTE: Log-in required",
+        "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json":{
+              "schema": {
+                "$ref": "#/components/schemas/dispatch_request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/dispatch"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/entities": {
+      "get": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "Get all points entities",
+        "description": "",
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/entities"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entities/{entity_name}": {
+      "get": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "Get entity detail like value & type",
+        "description": "",
+        "parameters": [
+          {
+            "name": "entity_name",
+            "in": "path",
+            "description": "pass entity name like: S.~33000Atrium.Settings.GSetPtZN2Override",
+            "schema": {
+              "type": "string",
+              "example": "S.~33000Atrium.Settings.GSetPtZN2Override"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/entity"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "Get entity detail like value & type",
+        "description": "",
+        "parameters": [
+          {
+            "name": "entity_name",
+            "in": "path",
+            "description": "pass entity name like: S.~33000Atrium.Settings.GSetPtZN2Override",
+            "schema": {
+              "type": "string",
+              "example": "S.~33000Atrium.Settings.GSetPtZN2Override"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json":{
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 426
+                  },
+                  "value": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/entity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/points/{point_id}/dispatch": {
+      "patch": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "Toggle dispatch point & change mode in niagara",
+        "description": "",
+        "parameters": [
+          {
+            "name": "point_id",
+            "in": "path",
+            "description": "point_id: int = 101",
+            "schema": {
+              "type": "integer",
+              "example": "101"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json":{
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/points/{point_id}/history": {
+      "get": {
+        "tags": [
+          "Point"
+        ],
+        "summary": "Get history associated to the mentioned point_id. NOTE: Log-in required",
+        "description": "",
+        "parameters": [
+          {
+            "name": "point_id",
+            "in": "path",
+            "description": "point_id: int = 101",
+            "schema": {
+              "type": "integer",
+              "example": "101"
+            }
+          },
+          {
+            "name": "from_time",
+            "in": "query",
+            "description": "Optional(from_time: str = 2020-09-28T00:00:00)",
+            "schema": {
+              "type": "string",
+              "example": "2020-09-28T00:00:00"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "on successful operation result will be for per hour to current date, here we will be showing few records only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/point_history"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Log-in user",
+        "description": "User can login via username and password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json":{
+              "schema": {
+                "$ref": "#/components/schemas/login_request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authentication Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource Not found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "register user",
+        "description": "User can register by passing username and password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json":{
+              "schema": {
+                "$ref": "#/components/schemas/register"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "user registered successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Resource Conflict Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "logout user. NOTE: Log-in required",
+        "description": "User can logout using this api",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "logged out user successfully"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user detail. NOTE: Log-in required",
+        "description": "Get user detail as well as building user associated with",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/algorithm-dcm": {
+      "get": {
+        "tags": [
+          "Algorithm"
+        ],
+        "summary": "Get dcm details",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/algorithm-dcm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/sites": {
+      "get": {
+        "tags": [
+          "Niagara4"
+        ],
+        "summary": "Get all sites. NOTE: Log-in required",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "names": [
+                      "S.~3199WaterSt",
+                      "S.~3110East59St",
+                      "S.~31430Broadway",
+                      "S.~3485Madison"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/history/{device_name}": {
+      "get": {
+        "tags": [
+          "Niagara4"
+        ],
+        "summary": "Get history for device by it's name. NOTE: Log-in required",
+        "description": "",
+        "parameters": [
+          {
+            "name": "device_name",
+            "in": "path",
+            "description": "pass device_name",
+            "schema": {
+              "type": "string",
+              "example": "3000 Atruim N4"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/device-history"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Niagara4"
+        ],
+        "summary": "Create history for specific device. NOTE: Log-in required",
+        "description": "",
+        "parameters": [
+          {
+            "name": "device_name",
+            "in": "path",
+            "description": "pass device_name",
+            "schema": {
+              "type": "string",
+              "example": "3000 Atruim N4"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/device-history"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/history": {
+      "get": {
+        "tags": [
+          "Niagara4"
+        ],
+        "summary": "Get history for specified time & point",
+        "description": "",
+        "parameters": [
+          {
+            "name": "point_id",
+            "in": "query",
+            "description": "pass device_name",
+            "schema": {
+              "type": "string",
+              "example": "3000 Atruim N4"
+            }
+          },
+          {
+            "name": "from_time",
+            "in": "query",
+            "description": "pass from_time: date=2020-10-08",
+            "schema": {
+              "type": "string",
+              "example": "2020-10-08"
+            }
+          },
+          {
+            "name": "to_time",
+            "in": "query",
+            "description": "pass to_time: date=2020-10-09",
+            "schema": {
+              "type": "string",
+              "example": "2020-10-09"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/device-history"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Niagara4"
+        ],
+        "summary": "Create history for specific point_id",
+        "description": "",
+        "parameters": [
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json":{
+              "schema": {
+                "$ref": "#/components/schemas/history-request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                    "$ref": "#/components/schemas/device-history"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/weather": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "summary": "This api will take lat/lon from user and return the weather information. NOTE: Log-in required",
+        "description": "dict: Weather information based on current, daily and hourly basis.",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "lat (Decimal): latitude",
+            "schema": {
+              "type": "number",
+              "example": "22.7196"
+            }
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "lon (Decimal): longitude",
+            "schema": {
+              "type": "number",
+              "example": "75.8577"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/weather/history": {
+      "get": {
+        "tags": [
+          "Weather"
+        ],
+        "summary": "This api will take lat, lon, from_date and to_date from user and return the historical weather information for past days. NOTE: Log-in required",
+        "description": "List: List of dictionary of Weather information categories by each day.",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "lat (Decimal): latitude",
+            "schema": {
+              "type": "number",
+              "example": "22.7196"
+            }
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "lon (Decimal): longitude",
+            "schema": {
+              "type": "number",
+              "example": "75.8577"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "description": "to_date(Date): Starting date of the date range",
+            "schema": {
+              "type": "string",
+              "example": "2020-05-01"
+            }
+          },
+          {
+            "name": "from_date",
+            "in": "query",
+            "description": "from_date(Date): Ending date of the date range",
+            "schema": {
+              "type": "string",
+              "example": "2020-05-02"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "building": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "example": "3000 Atrium"
+          },
+          "bill_history": {
+            "type": "array",
+            "example": "[]"
+          },
+          "billing_cycles": {
+            "type": "array",
+            "example": "[1]"
+          },
+          "billing_peak": {
+            "type": "array",
+            "example": "[2,3]"
+          },
+          "company": {
+            "type": "integer",
+            "example": 38
+          },
+          "consumes_gas": {
+            "type": "string",
+            "default": null
+          },
+          "consumes_steam": {
+            "type": "string",
+            "default": null
+          },
+          "devices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "building": {
+                  "type": "integer",
+                  "example": 5
+                },
+                "energy_type": {
+                  "type": "string",
+                  "example": "electric"
+                },
+                "equipments": {
+                  "type": "array",
+                  "example": "[1]"
+                },
+                "id": {
+                  "type": "integer",
+                  "example": 9
+                },
+                "name": {
+                  "type": "string",
+                  "example": "3000 Atruim N4"
+                },
+                "points": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "asset_type": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "current_value": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "device": {
+                        "type": "integer",
+                        "example": 9
+                      },
+                      "dispatches": {
+                        "type": "array",
+                        "example": "[]"
+                      },
+                      "equipment": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "id": {
+                        "type": "integer",
+                        "example": 422
+                      },
+                      "is_main": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "path": {
+                        "type": "string",
+                        "example": "S.~33000Atrium.Settings.EventType"
+                      },
+                      "point_type": {
+                        "type": "string",
+                        "example": null
+                      },
+                      "tag": {
+                        "type": "string",
+                        "example": "EVENT_TYPE"
+                      },
+                      "writable": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "unit": {
+                        "type": "string",
+                        "example": null
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "energy_stars": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "id": {
+            "type": "integer",
+            "example": 5
+          },
+          "market": {
+            "type": "string",
+            "example": null
+          },
+          "name": {
+            "type": "string",
+            "example": "S.~33000Atrium"
+          },
+          "sq_footage": {
+            "type": "string",
+            "example": null
+          },
+          "occupancy": {
+            "type": "string",
+            "example": null
+          },
+          "user": {
+            "type": "integer",
+            "example": 1
+          },
+          "utilities": {
+            "type": "array",
+            "example": "[]"
+          },
+          "utility": {
+            "type": "string",
+            "example": null
+          },
+          "zipcode": {
+            "type": "string",
+            "example": null
+          }
+        }
+      },
+      "building-energy-star-rating": {
+        "type": "object",
+        "properties": {
+          "change": {
+            "type": "integer",
+            "example": 0
+          },
+          "month": {
+            "type": "integer",
+            "example": 1
+          },
+          "month_display": {
+            "type": "string",
+            "example": "J"
+          },
+          "value": {
+            "type": "integer",
+            "example": 65
+          }
+        }
+      },
+      "login_request": {
+        "type": "object",
+        "properties": {
+        "email": {
+            "type": "string",
+            "example": "someone@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
+        }
+      },
+      "register": {
+        "type": "object",
+        "properties": {
+        "email": {
+            "type": "string",
+            "example": "someone@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "properties": {
+        "buildings": {
+            "type": "array",
+            "example": "[]"
+          },
+          "company": {
+            "type": "integer",
+            "example": 5
+          },
+          "email": {
+            "type": "string",
+            "example": "rishabh@gmail.com"
+          },
+          "first_name": {
+            "type": "string",
+            "example": ""
+          },
+          "last_name": {
+            "type": "string",
+            "example": ""
+          },
+          "id": {
+            "type": "integer",
+            "example": "49"
+          },
+          "is_active": {
+            "type": "boolean",
+            "example": true
+          },
+          "user_role": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "algorithm-dcm": {
+        "type": "object",
+        "properties": {
+        "Start Time": {
+            "type": "string",
+            "example": ""
+          },
+          "End Time": {
+            "type": "string",
+            "example": ""
+          },
+          "DCM - Immediate": {
+            "type": "string",
+            "example": ""
+          },
+          "DCM - Warning": {
+            "type": "string",
+            "example": ""
+          },
+          "DCM - Combined": {
+            "type": "string",
+            "example": ""
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ts": {
+                    "type": "string",
+                    "example": ""
+                  },
+                "quantity": {
+                    "type": "string",
+                    "example": ""
+                  }
+              }
+            }
+          }
+        }
+      },
+      "energy-demand": {
+        "type": "object",
+        "properties": {
+        "electricity": {
+            "type": "array",
+            "items":{
+              "type": "object",
+              "properties": {
+                "history": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ts": {
+                        "type": "string",
+                        "example": "2020-08-24T00:00:00.000000"
+                      },
+                      "quantity": {
+                        "type": "number",
+                        "example": 56
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "target": {
+            "type": "number",
+            "example": 800.0
+          }
+        }
+      },
+      "utilities": {
+        "type": "object",
+        "properties": {
+          "authorization_uid": {
+            "type": "string",
+            "example": "1231"
+          },
+          "bill_end_date": {
+            "type": "string",
+            "example": "2020-08-14T15:19:00"
+          },
+          "bill_start_date": {
+            "type": "string",
+            "example": "2020-10-07T15:57:00"
+          },
+          "bill_total_cost": {
+            "type": "number",
+            "example": 123.0
+          },
+          "bill_total_unit": {
+            "type": "string",
+            "example": null
+          },
+          "bill_total_volume": {
+            "type": "string",
+            "example": ""
+          },
+          "bill_total_kwh": {
+            "type": "string",
+            "example": ""
+          },
+          "billing_account": {
+            "type": "string",
+            "example": null
+          },
+          "building": {
+            "type": "integer",
+            "example": 5
+          },
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "line_items": {
+            "type": "array",
+            "items": {}
+          },
+          "meter_uid": {
+            "type": "string",
+            "example": "123"
+          },
+          "off_peak_cost": {
+            "type": "string",
+            "example": null
+          },
+          "off_peak_demand": {
+            "type": "string",
+            "example": null
+          },
+          "on_peak_cost": {
+            "type": "string",
+            "example": null
+          },
+          "on_peak_demand": {
+            "type": "string",
+            "example": null
+          },
+          "peak_demand": {
+            "type": "string",
+            "example": null
+          },
+          "peak_demand_cost": {
+            "type": "string",
+            "example": null
+          },
+          "raw_url": {
+            "type": "string",
+            "example": ""
+          },
+          "service_identifier": {
+            "type": "string",
+            "example": ""
+          },
+          "uid": {
+            "type": "string",
+            "example": ""
+          },
+          "utility": {
+            "type": "string",
+            "example": ""
+          }
+        }
+      },
+      "devices": {
+          "type": "object",
+          "properties": {
+            "building": {
+              "type": "integer",
+              "example": 5
+            },
+            "energy_type": {
+              "type": "string",
+              "example": "electric"
+            },
+            "equipments": {
+              "type": "array",
+              "items": {
+
+                "type": "integer",
+                "example": 1
+              }
+            },
+            "id": {
+              "type": "integer",
+              "example": 9
+            },
+            "name": {
+              "type": "string",
+              "example": "3000 Atruim N4"
+            },
+            "points": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                   "asset_type": {
+                      "type": "string",
+                      "example": null
+                    },
+                   "current_value": {
+                      "type": "string",
+                      "example": null
+                    },
+                  "device": {
+                      "type": "integer",
+                      "example": 9
+                    },
+                  "dispatches": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {}
+                      }
+                    },
+                  "equipment": {
+                      "type": "string",
+                      "example": null
+                    },
+                  "id": {
+                      "type": "integer",
+                      "example": null
+                    },
+                  "is_main": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                  "name": {
+                      "type": "string",
+                      "example": null
+                    },
+                  "path": {
+                      "type": "string",
+                      "example": "S.~33000Atrium.Settings.EventType"
+                    },
+                  "point_type": {
+                      "type": "string",
+                      "example": null
+                    },
+                  "tag": {
+                      "type": "string",
+                      "example": "EVENT_TYPE"
+                    },
+                  "unit": {
+                      "type": "string",
+                      "example": null
+                    },
+                  "writable": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                }
+              }
+            },
+            "third_party": {
+              "type": "string",
+              "example": "N4"
+            }
+          }
+      },
+      "energy-allocation": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "HVAC"
+            },
+            "quantity": {
+              "type": "integer",
+              "example": 95
+            }
+          }
+      },
+      "billing-cycle": {
+          "type": "object",
+          "properties": {
+            "days_left": {
+              "type": "integer",
+              "example":  -24
+            },
+            "from_date": {
+              "type": "string",
+              "example": "OCT 1"
+            },
+            "to_date": {
+              "type": "string",
+              "example": "OCT 31"
+            }
+          }
+      },
+      "billing-information": {
+          "type": "object",
+          "properties": {
+            "billing-information": {
+              "type": "object",
+              "properties": {
+                "days_left": {
+                  "type": "integer",
+                  "example": -24
+                },
+                "from_date": {
+                  "type": "string",
+                  "example": "OCT 1"
+                },
+                "to_date": {
+                  "type": "string",
+                  "example": "OCT 31"
+                }
+              }
+            },
+            "billing_day_total": {
+              "type": "integer",
+              "example": 773
+            },
+            "billing_peak": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "integer",
+                  "example": 221
+                },
+                "target": {
+                  "type": "integer",
+                  "example": 400
+                },
+                "targeted": {
+                  "type": "integer",
+                  "example": -45
+                },
+                "ts": {
+                  "type": "string",
+                  "example": "2020-10-02T09:45:00.000000"
+                }
+              }
+            },
+            "billing_total": {
+              "type": "integer",
+              "example": 9323
+            }
+          }
+      },
+      "annual-energy-demand": {
+          "type": "object",
+          "properties": {
+            "month_display": {
+              "type": "string",
+              "example": "J"
+            },
+            "month_number": {
+              "type": "integer",
+              "example": 1
+            },
+            "quantity": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "number",
+                  "example": 452.0
+                },
+                "target": {
+                  "type": "integer",
+                  "example": 400
+                },
+                "targeted": {
+                  "type": "integer",
+                  "example": -45
+                },
+                "ts": {
+                  "type": "string",
+                  "example": "2020-10-02T09:45:00.000000"
+                }
+              }
+            },
+            "unit": {
+              "type": "string",
+              "example": "kW"
+            }
+          }
+      },
+      "annual-energy-consumption": {
+          "type": "object",
+          "properties": {
+            "month_display": {
+              "type": "string",
+              "example": "J"
+            },
+            "month_number": {
+              "type": "integer",
+              "example": 1
+            },
+            "quantity": {
+              "type": "number",
+              "example": 192624.0
+            },
+            "unit": {
+              "type": "string",
+              "example": "kW"
+            }
+          }
+      },
+      "assets": {
+          "type": "object",
+          "properties": {
+            "display_name": {
+              "type": "string",
+              "example": "HVAC"
+            },
+            "equipments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "RTU1"
+                  },
+                  "points": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": "260"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "CHHS Heat watch Point"
+                        }
+                      }
+                    }
+                  }
+                }
+                  }
+              }
+          }
+      },
+      "greenhouse-gas-emissions": {
+          "type": "object",
+          "properties": {
+            "month_display": {
+              "type": "string",
+              "example": "J"
+            },
+            "month_number": {
+              "type": "integer",
+              "example": 1
+            },
+            "quantity": {
+              "type": "number",
+              "example": 192624.0
+            },
+            "percentage": {
+              "type": "number",
+              "example": 0
+            },
+            "unit": {
+              "type": "string",
+              "example": "tCO2e"
+            }
+          }
+      },
+      "assets_detail": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "RTU1"
+            },
+            "points": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": "260"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "CHHS Heat watch Point"
+                  }
+                }
+              }
+            }
+          }
+      },
+      "compare-energy-consumption": {
+          "type": "object",
+          "properties": {
+            "2019": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "1": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "2": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "3": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "4": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "5": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "6": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "7": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "8": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "9": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "10": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "11": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "12": {
+                    "type": "number",
+                    "example": 0.0
+                  }
+                }
+              }
+            },
+            "2020": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "1": {
+                    "type": "number",
+                    "example": 1000.0
+                  },
+                  "2": {
+                    "type": "number",
+                    "example": 20.0
+                  },
+                  "3": {
+                    "type": "number",
+                    "example": 6698.0
+                  },
+                  "4": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "5": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "6": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "7": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "8": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "9": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "10": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "11": {
+                    "type": "number",
+                    "example": 0.0
+                  },
+                  "12": {
+                    "type": "number",
+                    "example": 0.0
+                  }
+                }
+              }
+            }
+          }
+      },
+      "compare-demand-consumption": {
+          "type": "object",
+          "properties": {
+            "2019": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "1": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-01-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "2": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-02-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "3": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-03-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "4": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-04-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "5": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-05-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "6": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-06-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "7": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-07-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "8": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-08-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "9": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-09-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "10": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-10-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "11": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-11-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "12": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-12-01T05:00:00.000000"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "2020": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "1": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-01-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "2": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-02-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "3": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-03-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "4": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-04-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "5": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-05-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "6": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-06-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "7": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-07-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "8": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-08-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "9": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-09-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "10": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-10-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "11": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-11-01T05:00:00.000000"
+                      }
+                    }
+                  },
+                  "12": {
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number",
+                        "example": 452.0
+                      },
+                      "target": {
+                        "type": "integer",
+                        "example": 400
+                      },
+                      "targeted": {
+                        "type": "integer",
+                        "example": -45
+                      },
+                      "ts": {
+                        "type": "string",
+                        "example": "2019-12-01T05:00:00.000000"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+      },
+      "device_dispatch": {
+          "type": "object",
+          "properties": {
+            "end_date": {
+              "type": "string",
+              "example":  "2020-09-11T16:00:02.420000"
+            },
+            "event_type": {
+              "type": "string",
+              "example": null
+            },
+            "mode": {
+              "type": "string",
+              "example": null
+            },
+            "point_id": {
+              "type": "integer",
+              "example": 415
+            },
+            "power_kw": {
+              "type": "string",
+              "example": null
+            },
+            "schedule_date": {
+              "type": "string",
+              "example": "2020-09-11T15:45:02.420000"
+            }
+          }
+      },
+      "device_points": {
+        "type": "object",
+        "properties": {
+          "asset_type": {
+            "type": "string",
+            "example": null
+          },
+          "current_value": {
+            "type": "string",
+            "example": null
+          },
+          "device": {
+            "type": "integer",
+            "example": 9
+          },
+          "dispatches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "equipment": {
+            "type": "string",
+            "example": null
+          },
+          "id": {
+            "type": "integer",
+            "example": null
+          },
+          "is_main": {
+            "type": "boolean",
+            "example": false
+          },
+          "name": {
+            "type": "string",
+            "example": null
+          },
+          "path": {
+            "type": "string",
+            "example": "S.~33000Atrium.Settings.EventType"
+          },
+          "point_type": {
+            "type": "string",
+            "example": null
+          },
+          "tag": {
+            "type": "string",
+            "example": "EVENT_TYPE"
+          },
+          "unit": {
+            "type": "string",
+            "example": null
+          },
+          "writable": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "dispatch": {
+          "type": "object",
+          "properties": {
+            "end_date": {
+              "type": "string",
+              "example":  "2020-09-11T16:00:02.420000"
+            },
+            "event_type": {
+              "type": "string",
+              "example": null
+            },
+            "mode": {
+              "type": "string",
+              "example": null
+            },
+            "point_id": {
+              "type": "integer",
+              "example": 415
+            },
+            "power_kw": {
+              "type": "string",
+              "example": null
+            },
+            "schedule_date": {
+              "type": "string",
+              "example": "2020-09-11T15:45:02.420000"
+            }
+          }
+      },
+      "dispatch_request": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "end_date": {
+                  "type": "string",
+                  "example": "2020-09-11T16:00:02.420000"
+                },
+                "event_type": {
+                  "type": "string",
+                  "example": null
+                },
+                "mode": {
+                  "type": "string",
+                  "example": null
+                },
+                "point_id": {
+                  "type": "integer",
+                  "example": 415
+                },
+                "power_kw": {
+                  "type": "string",
+                  "example": null
+                },
+                "schedule_date": {
+                  "type": "string",
+                  "example": "2020-09-11T15:45:02.420000"
+                }
+              }
+            }
+          }
+        }
+      },
+      "entities": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 426
+                  },
+                  "key": {
+                    "type": "string",
+                    "example": "S.~33000Atrium.Settings.GSetPtZN2Override"
+                  },
+                  "value": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+      },
+      "entity": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "Bool"
+                },
+                "value": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+      },
+      "point_history": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "number",
+            "example": "276.39"
+          },
+          "ts": {
+            "type": "string",
+            "example": "2020-10-08 01:00:00"
+          }
+        }
+      },
+      "device-history": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "mode": {
+            "type": "string",
+            "example": null
+          },
+          "point": {
+            "type": "integer",
+            "example": "1"
+          },
+          "quantity": {
+            "type": "number",
+            "example": 23.0
+          },
+          "ts": {
+            "type": "string",
+            "example": "2020-10-08T13:43:00-04:00"
+          }
+        }
+      },
+      "history-request": {
+        "type": "object",
+        "properties": {
+          "point_id": {
+            "type": "integer",
+            "example": "1"
+          },
+          "mode": {
+            "type": "string",
+            "example": null
+          },
+          "quantity": {
+            "type": "number",
+            "example": 23.0
+          },
+          "ts": {
+            "type": "string",
+            "example": "2020-10-08T13:43:00-04:00"
+          }
+        }
+      }
+    }
+  }
+}
+

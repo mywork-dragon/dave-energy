@@ -1,0 +1,155 @@
+{
+  "name": "dave-energy-fe",
+  "contributors": [
+    {
+      "name": "Gihad Kihala",
+      "url": "https://github.com/giladkah"
+    },
+    {
+      "name": "James Manlapid",
+      "url": "https://github.com/jmanlapid"
+    }
+  ],
+  "description": "The application that is served to user interfaces",
+  "version": "0.1.0",
+  "homepage": "https://david.energy",
+  "license": "All Rights Reserved, Proprietary to David Energy",
+  "main": "./src/index.tsx",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dave-energy/dave-energy"
+  },
+  "private": true,
+  "engines": {
+    "node": "^12.16.2",
+    "yarn": "^1.22.4",
+    "npm": "^6.14.4"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development webpack --color --progress --watch",
+    "analyze": "webpack --profile --json > webpack-bundle-stats.json; webpack-bundle-analyzer webpack-bundle-stats.json",
+    "build": "rm -rf ./build && NODE_ENV=production webpack --color --progress",
+    "test": "jest --colors --verbose --collect-coverage --no-cache",
+    "test:watch": "jest --watch --colors --collect-coverage --verbose",
+    "lint": "eslint ./src/**/* --ext ts,tsx",
+    "lint:fix": "eslint ./src/**/* --ext ts,tsx --fix",
+    "pretty": "prettier --check  ./src/**/*.{ts,tsx}",
+    "pretty:fix": "prettier --write ./src/**/*.{ts,tsx}"
+  },
+  "dependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
+    "@babel/plugin-proposal-optional-chaining": "^7.9.0",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-react": "^7.7.4",
+    "@babel/preset-typescript": "^7.7.7",
+    "@types/react": "^16.9.34",
+    "@types/react-datepicker": "3.1.1",
+    "@types/react-dom": "^16.9.6",
+    "@types/react-redux": "^7.1.7",
+    "@types/react-router": "^5.1.5",
+    "@types/react-router-dom": "^5.1.4",
+    "@types/redux-logger": "^3.0.7",
+    "@types/styled-components": "^5.1.4",
+    "babel-jest": "^26.0.1",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-styled-components": "^1.11.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "camelcase-keys": "^6.2.2",
+    "case-sensitive-paths-webpack-plugin": "^2.3.0",
+    "classnames": "^2.2.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.1.0",
+    "css-loader": "^3.5.2",
+    "file-loader": "^6.0.0",
+    "highcharts": "8.2.0",
+    "highcharts-more": "^0.1.7",
+    "highcharts-react-official": "^3.0.0",
+    "html-webpack-plugin": "4.5.0",
+    "less": "3.11",
+    "less-loader": "^7.2.1",
+    "lodash": "^4.17.20",
+    "lodash.debounce": "^4.0.8",
+    "moment": "^2.29.1",
+    "react": "^16.13.1",
+    "react-datepicker": "^3.2.2",
+    "react-dom": "^16.13.1",
+    "react-draggable": "^4.4.3",
+    "react-hook-form": "^5.4.2",
+    "react-olark": "^1.0.0-alpha.8",
+    "react-redux": "^7.2.0",
+    "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2",
+    "react-svg-loader": "^3.0.3",
+    "redux": "^4.0.4",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "semantic-ui-less": "^2.4.1",
+    "semantic-ui-react": "^2.0.1",
+    "snake-case": "^3.0.3",
+    "style-loader": "^1.1.4",
+    "styled-components": "^5.2.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.10.1",
+    "@testing-library/react": "^10.0.4",
+    "@types/classnames": "^2.2.11",
+    "@types/jest": "^25.2.1",
+    "@types/lodash.debounce": "^4.0.6",
+    "@types/node": "^14.0.5",
+    "@typescript-eslint/eslint-plugin": "^2.28.0",
+    "@typescript-eslint/parser": "^2.28.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-react": "^7.21.4",
+    "husky": "^3.1.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^26.0.1",
+    "jest-fetch-mock": "^3.0.3",
+    "lint-staged": "^9.5.0",
+    "mini-css-extract-plugin": "^1.3.4",
+    "prettier": "^1.19.1",
+    "react-test-renderer": "^16.12.0",
+    "react-testing-library": "^8.0.1",
+    "ts-jest": "^26.0.0",
+    "typescript": "^3.8.3",
+    "url-loader": "^4.1.1",
+    "webpack-bundle-analyzer": "^3.8.0"
+  },
+  "proxy": "http://localhost:5000/",
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "yarn lint:fix",
+      "yarn pretty:fix"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "resolutions": {
+    "styled-components": "^5"
+  }
+}
