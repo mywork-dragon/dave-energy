@@ -27,7 +27,7 @@ def run():
             fp = open(csv_filename, "r")
             csv_reader = csv.DictReader(fp)
             for row in csv_reader:
-                lmp = get_lmp_instance(row, False)
+                lmp = get_lmp_instance(row)
                 if lmp:
                     lmp.persist()
                 else:

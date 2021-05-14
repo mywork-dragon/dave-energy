@@ -23,12 +23,13 @@ class DCMCrossedPeak(ParentEvent):
         meter_point_ids = [point["point_id"] for point in meter_points]
 
         bc_demand_data = history_utils.get_summed_point_history(meter_point_ids, lookback_window_start, _now)
-        if bc_demand_data and len(bc_demand_data) != 4:
+        if bc_demand_data and len(bc_demand_data) == 4:
+            bc_demand_data.reverse()
             return [
-                bc_demand_data[-1]["quantity"],
-                bc_demand_data[-2]["quantity"],
-                bc_demand_data[-3]["quantity"],
-                bc_demand_data[-4]["quantity"]
+                bc_demand_data[0]["quantity"],
+                bc_demand_data[1]["quantity"],
+                bc_demand_data[2]["quantity"],
+                bc_demand_data[3]["quantity"]
             ]
 
         return None

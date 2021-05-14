@@ -9,6 +9,12 @@ pipenv
 PostgreSQL
 ```
 
+## Clone the repo
+
+```
+git clone git@github.com:dave-energy/dave-energy.git
+```
+
 ## Use Python 3.7.5
 
 

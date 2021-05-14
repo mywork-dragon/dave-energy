@@ -3,6 +3,7 @@ from flask import Flask, render_template, send_from_directory
 
 from app import app
 from controller.common_routes import login_required
+from config import logger
 
 
 @app.route("/tools/index", methods=["GET"])
@@ -48,3 +49,9 @@ def solar_edge_credential():
 @login_required
 def point_checker():
     return render_template("/tools/point_checker.html")
+
+@app.route("/tools/supply/quote", methods=["GET"])
+@login_required
+def quote():
+    logger.info("Inside quote")
+    return render_template("/tools/supply/quote.html")

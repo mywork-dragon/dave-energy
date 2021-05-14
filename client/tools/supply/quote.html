@@ -1,0 +1,64 @@
+<html>
+    <title>Solar Edge Credential</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script type="text/javascript">
+
+            function load_customer_dropdown() {
+                $('#customer').empty();
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/supply/goliath_customer_id_and_name",
+                    success: function(data){
+                        idAndNames = data['customers'];
+                        $('#customer').append($("<option value=''>Select</option>"));
+                        for (var i = 0; i < idAndNames.length; i++) {
+                            $('#customer').append($("<option></option>").attr("value", idAndNames[i]['id']).text(idAndNames[i]['name'] + '(' + idAndNames[i]['id'] + ')'));
+                        }
+                    }
+                });
+            };
+
+            function read_quote() {
+                $('#quote_result').empty();
+                var dict = {};
+                dict["customer_id"] = $("#customer").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: "/tools/supply/get_quote",
+                    data : dict,
+                    success: function(data){
+                        quote = JSON.stringify(data['quote'], null, 2);
+                        $('#quote_result').append($("<p>" + quote + "</p>"));
+                    }
+                });
+            };
+
+        </script>
+
+
+    <body onload="load_customer_dropdown()">
+        <br><br>
+        <div>
+            <label class='ml-2'>Customer:</label>
+            <select id="customer" onchange="javascript:clear_result();" style="height: 39px;">
+                <option value="">Select</option>
+            </select>
+            <br><br>
+            
+            <button id="submit" type="button" onclick="read_quote()" class="ml-2 btn btn-outline-primary">Submit</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <br>
+            <hr/>
+        </div>
+
+        <div id='quote_result'>
+        </div>
+
+    </body>
+</html>

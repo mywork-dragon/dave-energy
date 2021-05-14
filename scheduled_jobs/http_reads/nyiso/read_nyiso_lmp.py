@@ -47,16 +47,19 @@ def download_data(filename: str, start_date: str, end_date: str, report_key: NYI
             fl.write(decoded_content)
 
 
-def get_lmp_instance(row_dict, is_real_time):
+def get_lmp_instance(row_dict):
     ts_beginning = None
+    is_real_time = None
     if "Eastern Date Hour" in row_dict:
         ts_beginning = datetime.strptime(row_dict["Eastern Date Hour"], DT_FORMAT)
     else:
         ts_beginning = datetime.strptime(row_dict["RTD End Time Stamp"], DT_FORMAT)
     price = None
     if "DAM Zonal LBMP" in row_dict:
+        is_real_time = False
         price = row_dict["DAM Zonal LBMP"]
     else:
+        is_real_time = True
         price = row_dict["RTD Zonal LBMP"]
 
     zone_name = row_dict["Zone Name"].lower()

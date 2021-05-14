@@ -6,6 +6,8 @@ import urllib3
 
 class Config(object):
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    if SQLALCHEMY_DATABASE_URI:
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("://", "ql://", 1)
     DEBUG = False
     TESTING = False
     LOG_LEVEL = "INFO"
@@ -50,6 +52,7 @@ class LocalConfig(Config):
     DEBUG = True
     LOG_LEVEL = "DEBUG"
     SQLALCHEMY_DATABASE_URI = LOCAL_SQLALCHEMY_DATABASE_URI
+    SQLALCHEMY_DATABASE_URI = "postgres://ubk13i67opjdcm:p820503e85984ba2f393ab2a1626c33efc1af500005d14ed2caf91920689bd925@ec2-54-87-95-210.compute-1.amazonaws.com:5432/da9ljnoshn10ga"
 
     NIAGARA4_SERVER = "https://23.24.87.6:443"
     NIAGARA4_USERNAME = "Energy"
@@ -66,6 +69,9 @@ class TestingConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL", "postgresql://postgres:password@localhost/denergy_test"
+    )
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        "DATABASE_URL", "postgres://ubk13i67opjdcm:p820503e85984ba2f393ab2a1626c33efc1af500005d14ed2caf91920689bd925@ec2-54-87-95-210.compute-1.amazonaws.com:5432/da9ljnoshn10ga"
     )
 
     NIAGARA4_SERVER = "https://34.203.113.170:443"

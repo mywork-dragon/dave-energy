@@ -85,4 +85,6 @@ import tools.controller.point_routes
 import tools.controller.point_checker_routes
 import tools.controller.check_readiness_routes
 
+import tools.controller.supply.quote_routes
+
 import admin

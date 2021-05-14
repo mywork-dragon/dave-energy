@@ -4,30 +4,29 @@ from datetime import timedelta
 from data.db_connection import DBConnection
 from models.unit import Unit
 
-Therms = Unit.query.filter_by(symbol="Therms").first()
-MLBS = Unit.query.filter_by(symbol="Mlbs").first()
-
 
 class GasAndSteam:
 
+    Therms = Unit.query.filter_by(symbol="Therms").first()
+    MLBS = Unit.query.filter_by(symbol="Mlbs").first()
     def get_gas_cost_ytd(self, building_id, year):
-        return self._get_cost_ytd(building_id, year, MLBS.id)
+        return self._get_cost_ytd(building_id, year, GasAndSteam.MLBS.id)
 
     def get_gas_cost_curr_cycle(self, building_id, dt_in_cycle):
-        return self._get_cost_curr_cycle(building_id, dt_in_cycle, MLBS.id)
+        return self._get_cost_curr_cycle(building_id, dt_in_cycle, GasAndSteam.MLBS.id)
 
     def get_date_in_latest_gas_billing_cycle(self, building_id):
-        return self._get_date_in_latest_billing_cycle(building_id, MLBS.id)
+        return self._get_date_in_latest_billing_cycle(building_id, GasAndSteam.MLBS.id)
 
 
     def get_steam_cost_ytd(self, building_id, year):
-        return self._get_cost_ytd(building_id, year, Therms.id)
+        return self._get_cost_ytd(building_id, year, GasAndSteam.Therms.id)
 
     def get_steam_cost_curr_cycle(self, building_id, dt_in_cycle):
-        return self._get_cost_curr_cycle(building_id, dt_in_cycle, Therms.id)
+        return self._get_cost_curr_cycle(building_id, dt_in_cycle, GasAndSteam.Therms.id)
 
     def get_date_in_latest_steam_billing_cycle(self, building_id):
-        return self._get_date_in_latest_billing_cycle(building_id, Therms.id)
+        return self._get_date_in_latest_billing_cycle(building_id, GasAndSteam.Therms.id)
 
     def _get_cost_ytd(self, building_id, year, unit_id):
         with DBConnection() as conn:

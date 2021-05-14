@@ -18,7 +18,7 @@ class LMP:
     def persist(self):
         print("Persisting: {}, {}, {}, {}, {}".format(self.dt_beginning, self.hr_ending, self.is_real_time, self.zone_id, self.price))
         with DBEnergyCurvesConnection() as conn:
-            sql = """insert into lmp_temp (dt, price, is_real_time, hr_ending, zone_id, utc_created)
+            sql = """insert into lmp (dt, price, is_real_time, hr_ending, zone_id, utc_created)
                 values (%s, %s, %s, %s, %s, %s)
                 on conflict (dt, hr_ending, zone_id, is_real_time, price)
                 do nothing
