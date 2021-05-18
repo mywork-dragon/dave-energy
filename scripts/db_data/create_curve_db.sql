@@ -44,7 +44,7 @@ create table lmp (
     hr_ending INT NOT NULL,
     zone_id INT REFERENCES zone(id) NOT NULL,
     utc_created timestamptz NOT NULL,
-    UNIQUE(dt, hr_ending, zone_id, is_real_time, price)
+    UNIQUE(dt, hr_ending, zone_id, is_real_time)
 );
 
 
@@ -163,21 +163,57 @@ create table customer_lead_detail (
     utc_created timestamptz NOT NULL
 );
 
+create table utility_zone (
+    id SERIAL PRIMARY KEY,
+    utility_id INT REFERENCES utility(id) NOT NULL,
+    zone_id INT REFERENCES zone(id) NOT NULL,
+    UNIQUE(utility_id, zone_id)
+);
 
+create table rate_class (
+    id SERIAL PRIMARY KEY,
+    utility_id INT REFERENCES utility(id) NOT NULL,
+    name TEXT NOT NULL
+);
 
-2:03
-facility	type
-facility_number	varchar
-utility_id	int
+create table season (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
 
+create table utility_season (
+    id SERIAL PRIMARY KEY,
+    utility_id INT REFERENCES utility(id) NOT NULL,
+    season_id INT REFERENCES season(id) NOT NULL,
+    delivery_month INT NOT NULL,
+    UNIQUE(utility_id, season_id, delivery_month)
+);
 
+create table demand_charge (
+    id SERIAL PRIMARY KEY,
+    curve_type_id INT REFERENCES curve_type(id) NOT NULL,
+    rate_class_id INT REFERENCES rate_class(id) NOT NULL,
+    unit_id INT REFERENCES unit(id) NOT NULL,
+    time_bucket_id INT REFERENCES time_bucket(id) NOT NULL,
+    is_ratchet boolean default false,
+    is_rolling boolean default false,
+    is_contract_demand boolean default false,
+    is_max_of_time_bucket boolean default false,
+    is_load_factor_dependent boolean default false,
+    interval_length INT NOT NULL,
+    ratchet_length INT NOT NULL,
+    dt_implementation timestamptz NOT NULL,
+    start_hour INT NOT NULL,
+    end_hour INT NOT NULL,
+    delivery_month INT NOT NULL,
+    hour_id INT NOT NULL
+);
 
-
-
-2:03
-customer_lead_detail	
-start_date	date
-facility_id	int
-zone_id	int
-customer_lead_id	int
-utc_timestamp	datetime
+create table dcm_charge_curve (
+    id SERIAL PRIMARY KEY,
+    price INT NOT NULL,
+    dt_forward DATE NOT NULL,
+    demand_level INT NOT NULL,
+    load_factor_level INT NOT NULL,
+    demand_charge_id INT REFERENCES time_bucket(id) NOT NULL
+);

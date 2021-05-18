@@ -20,9 +20,10 @@ class CapacityCurve(TrulightCurve):
 
     
     @staticmethod
-    def get_instance(json_curve, iso_name):
+    def get_instance(json_curve):
         dt_forward = datetime.strptime(json_curve["forwardDate"], "%Y-%m-%dT%H:%M:%S")
         utc_computed = datetime.strptime(json_curve["curveDateTime"], "%Y-%m-%dT%H:%M:%SZ")
+        iso_name = json_curve["iso"].lower()
         
         zone_name = json_curve["zone"].lower()
         zone_id = TrulightCurve.get_zone_id(zone_name)

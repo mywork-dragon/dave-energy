@@ -34,6 +34,9 @@ def get_point_history(
 ) -> List[Dict[str, Any]]:
     ret_tz = pytz.timezone(in_tz)
     ts_and_quantities = []
+    # TODO: Remove this ts check once history table has duplicates removed
+    # and (point_id, ts) are set to unique.
+    ts_found = set()
     with DBConnection() as conn:
         sql = """select ts, quantity
             from history hist
@@ -47,7 +50,10 @@ def get_point_history(
             if quantity:
                 ts = utils.round_up_to_current_fifteen_minutes(rec["ts"])
                 ts = ts.astimezone(ret_tz)
+                if ts in ts_found:
+                    continue
 
                 ts_and_quantities.append({"ts": ts, "quantity": quantity})
+                ts_found.add(ts)
 
     return ts_and_quantities

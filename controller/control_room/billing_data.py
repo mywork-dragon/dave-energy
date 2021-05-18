@@ -2,11 +2,10 @@
 import pytz
 from datetime import datetime
 
-from common import utils
+from common import utils, history_utils
 from models.asset import Asset
 from models.asset_type import AssetType
 from models.point import Point
-from services.device_service import get_energy_history
 
 
 def get_billing_cycle_meter_values(building_id: int, from_time: datetime, to_time: datetime):
@@ -18,7 +17,7 @@ def get_billing_cycle_meter_values(building_id: int, from_time: datetime, to_tim
     meter_data = {}
     for asset in meter_assets:
         meter_point = Point.query.filter_by(asset_id=asset.id, tag='METER').first()
-        energy_history = get_energy_history([meter_point], from_time, to_time)
+        energy_history = history_utils.get_point_history(meter_point.id, from_time, to_time)
         for eh in energy_history:
             ts = eh["ts"]
             ts = utils.round_up_to_current_fifteen_minutes(ts)

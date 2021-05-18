@@ -55,8 +55,10 @@ class N4Reader:
 
                 dt_in_tz = ts.astimezone(tz)
 
-                sql = """insert into history (point_id, ts, quantity, created_at) values (%s, %s, %s, NOW())
-                    ON CONFLICT DO NOTHING
+                sql = """insert into history (point_id, ts, quantity, created_at)
+                    values (%s, %s, %s, CLOCK_TIMESTAMP())
+                    ON CONFLICT (point_id, ts)
+                    DO NOTHING
                     """
                 conn.execute(sql, [point_id, dt_in_tz, quantity])
                 cnt += 1

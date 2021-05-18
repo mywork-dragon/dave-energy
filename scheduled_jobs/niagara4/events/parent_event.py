@@ -33,6 +33,8 @@ class ParentEvent:
             logger.info("Writing the event to N4 for asset id: {}".format(controllable_asset_id))
             event_utils.write_event_to_n4(building_id, controllable_asset_id, True, NiagaraStatusType.DCM)
         
+        slack.send_alert('Created DCM event for building: {}({})'.format(building_name, building_id))
+
         # utils.send_email(FROM_EMAIL,
         #                  TO_EMAIL_LST,
         #                  "David Energy: DCM event created for {}".format(building_name),

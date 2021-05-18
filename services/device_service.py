@@ -139,35 +139,3 @@ def _round_up_to_current_fifteen_minutes(time: datetime) -> datetime:
             minute = min
             break
     return time.replace(minute=minute, second=0, microsecond=0)
-
-
-def get_energy_history(
-    points: List[Point], from_time: datetime, to_time: datetime
-) -> List[Any]:
-    """
-    get values on 15 min interval for main points (points we see on the graph)
-    """
-    points_dict = {}
-    from_time = _round_up_to_current_fifteen_minutes(from_time)
-    to_time = _round_up_to_current_fifteen_minutes(to_time)
-    
-    for point_obj in points:
-        history_data = History.get_history(
-            point_obj.id,
-            from_time,
-            to_time,
-        )
-        for history in history_data:
-            if history.quantity:
-                history_timestamp = _round_up_to_current_fifteen_minutes(history.ts)
-                if history_timestamp in points_dict:
-                    points_dict[history_timestamp] += history.quantity
-                else:
-                    points_dict[history_timestamp] = history.quantity
-
-    points_history_list = [
-        dict(ts=key, quantity=value)
-        for key, value in points_dict.items()
-    ]
-
-    return points_history_list

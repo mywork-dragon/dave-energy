@@ -27,8 +27,7 @@ def run(curve_url, trulight_api_type: TrulightAPIType):
             logger.info("Persisting forward curves completed.")
         elif trulight_api_type == TrulightAPIType.Capacity:
             logger.info("Persisting capacity curves.")
-            iso_name = curve_url.split("/")[-1]
-            PersistCapacityCurves().persist(curves, iso_name)
+            PersistCapacityCurves().persist(curves)
             logger.info("Persisting capacity curves completed.")
 
     except:

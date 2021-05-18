@@ -121,10 +121,12 @@ def _last_read_ts_in_db(point_id):
 def _write_to_db(point_id, solar_data):
     with DBConnection() as conn:
         for val in solar_data:
-            sql = '''insert into history (point_id, ts, quantity, created_at) values (%s, %s, %s, NOW())
-                ON CONFLICT (point_id, ts) DO UPDATE SET quantity = %s
+            sql = '''insert into history (point_id, ts, quantity, created_at)
+                values (%s, %s, %s, CLOCK_TIMESTAMP())
+                ON CONFLICT (point_id, ts)
+                DO NOTHING
                 '''
-            conn.execute(sql, [point_id, val['dt'], val['value'], val['value']])
+            conn.execute(sql, [point_id, val['dt'], val['value']]) 
 
 
 if __name__ == '__main__':

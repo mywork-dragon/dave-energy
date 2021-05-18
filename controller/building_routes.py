@@ -60,6 +60,26 @@ def get_buildings() -> Tuple[Response, int]:
     return jsonify(buildings), 200
 
 
+@app.route("/get-display-reports", methods=["GET"])
+@login_required
+def get_display_reports():
+    user = User.query.filter_by(id=current_user.id).first()
+    resp = {}
+    resp['reports_to_display'] = [] 
+    if user.user_role != 3 or user.company.name == "JRS":
+        resp['reports_to_display'] = [
+            "Control Room",
+            "Analytics",
+            "Sustainability"
+        ]
+    elif user.user_role == 3:
+        resp['reports_to_display'] = ["Analytics"]
+    else:
+        raise Exception("Can't determine which reports to display.")
+    
+    return jsonify(resp), 200
+
+
 @app.route("/building/<int:building_id>/energy-demand", methods=["GET"])
 @login_required
 def get_building_energy_demand_data(building_id: int) -> Tuple[Response, int]:

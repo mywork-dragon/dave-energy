@@ -17,7 +17,7 @@ class DCMCrossedPeak(ParentEvent):
 
     def _get_last_four_n4_value(self, building_id: int) -> Optional[Dict[str, Any]]:
         _now = datetime.utcnow().replace(tzinfo=pytz.utc)
-        lookback_window_start = _now - timedelta(minutes=(events_config.LOOKBACK_THRESHOLD_IN_MINS*4) + 5)
+        lookback_window_start = _now - timedelta(minutes=(events_config.LOOKBACK_THRESHOLD_IN_MINS*4) + 10)
 
         meter_points = point_utils.get_asset_points(building_id, "Meter", tag="METER")
         meter_point_ids = [point["point_id"] for point in meter_points]

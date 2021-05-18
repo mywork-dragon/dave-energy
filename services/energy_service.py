@@ -16,7 +16,6 @@ from common.constants import (
 from models.building import Building
 from models.asset import Asset
 from models.point import Point
-from services.device_service import get_energy_history
 from services.solar_service import (
     create_history_for_solar_energy,
     create_history_for_solar_power,
@@ -57,9 +56,8 @@ def get_energy_consumption_data(
             continue
         
         # TODO: Remove the duplication of code below for meter export point
-        # TODO: Replace get_energy_history() with history_utils
         asset_type_to_unit[asset.asset_type.name] = meter_point.unit.symbol
-        energy_history = get_energy_history([meter_point], from_time, to_time)
+        energy_history = history_utils.get_point_history(meter_point.id, from_time, to_time)
         for eh in energy_history:
             # TODO: Should be converted to timezone of the building
             ts = eh["ts"].astimezone(EST_TZ)
@@ -75,7 +73,7 @@ def get_energy_consumption_data(
 
         meter_export_point = Point.query.filter_by(asset_id=asset.id, tag='METER_EXPORT').first()
         if meter_export_point:
-            energy_history = get_energy_history([meter_export_point], from_time, to_time)
+            energy_history = history_utils.get_point_history(meter_export_point.id, from_time, to_time)
             for eh in energy_history:
                 # TODO: Should be converted to timezone of the building
                 ts = eh["ts"].astimezone(EST_TZ)

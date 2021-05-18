@@ -2,7 +2,7 @@
 from scheduled_jobs.trulight_energy.run import run
 from scheduled_jobs.trulight_energy.run import TrulightAPIType
 
-CAPACITY_CURVE_URL = "/api/CapacityCurve/NyIso"
+CAPACITY_CURVE_URL = "/api/CapacityCurve"
 
 
 if __name__ == "__main__":

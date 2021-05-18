@@ -26,7 +26,7 @@ class EnergyCurve(TrulightCurve):
     
     @staticmethod
     def get_instance(json_curve):
-        iso_name = json_curve["controlArea"].lower()
+        iso_name = json_curve["iso"].lower()
         iso = ReferenceData.get_instance().get_iso(iso_name)
         if not iso:
             print("ISO does not exist: {}".format(iso_name))

@@ -9,12 +9,16 @@ from scheduled_jobs.trulight_energy.capacity_curves.capacity_curve import Capaci
 
 class PersistCapacityCurves:
 
-    def persist(self, energy_curves_json, iso_name):
+    ISOs_OF_INTEREST = ["nyiso"]
+    def persist(self, energy_curves_json):
         print("Found {} foward curves, persisting them.".format(len(energy_curves_json)))
         with DBEnergyCurvesConnection() as conn:
             for json_curve in energy_curves_json:
+                if not json_curve["iso"].lower() in PersistCapacityCurves.ISOs_OF_INTEREST:
+                    continue
+
                 # Translate to list of objects
-                capacity_curve = CapacityCurve.get_instance(json_curve, iso_name)
+                capacity_curve = CapacityCurve.get_instance(json_curve)
                 if not capacity_curve:
                     print("Skipping: {}".format(json_curve))
                     continue
