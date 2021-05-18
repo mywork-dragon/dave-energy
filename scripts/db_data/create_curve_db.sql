@@ -217,3 +217,31 @@ create table dcm_charge_curve (
     load_factor_level INT NOT NULL,
     demand_charge_id INT REFERENCES time_bucket(id) NOT NULL
 );
+
+create table rps_curve_type (
+    id SERIAL PRIMARY KEY,
+    state_id INT REFERENCES state(id) NOT NULL,
+    name TEXT NOT NULL,
+    dt_effective DATE NOT NULL,
+    dt_end DATE NOT NULL
+);
+
+create table rps_curve (
+    id SERIAL PRIMARY KEY,
+    utc_timestamp timestamptz NOT NULL,
+    rps_curve_type_id INT REFERENCES rps_curve_type(id) NOT NULL,
+    dt_forward DATE NOT NULL,
+    obligation_percentage NUMERIC NOT NULL,
+    wholesale_rec_offer NUMERIC NOT NULL
+);
+
+create table rps_obligation (
+    id SERIAL PRIMARY KEY,
+    utc_timestamp timestamptz NOT NULL,
+    rps_curve_type_id INT REFERENCES rps_curve_type(id) NOT NULL,
+    dt_forward DATE NOT NULL,
+    obligation_percentage NUMERIC NOT NULL,
+    acp_rate NUMERIC NOT NULL,
+    compliance_year INT NOT NULL
+);
+
