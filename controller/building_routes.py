@@ -66,16 +66,21 @@ def get_display_reports():
     user = User.query.filter_by(id=current_user.id).first()
     resp = {}
     resp['reports_to_display'] = [] 
-    if user.user_role != 3 or user.company.name == "JRS":
+    if user.user_role == 3:
+        if user.company.name == "JRS":
+            resp['reports_to_display'] = [
+                "Control Room",
+                "Analytics-Management",
+                "Sustainability"
+            ]
+        else:
+            resp['reports_to_display'] = ["Analytics-Management"]
+    else:
         resp['reports_to_display'] = [
             "Control Room",
-            "Analytics",
+            "Analytics-",
             "Sustainability"
         ]
-    elif user.user_role == 3:
-        resp['reports_to_display'] = ["Analytics"]
-    else:
-        raise Exception("Can't determine which reports to display.")
     
     return jsonify(resp), 200
 

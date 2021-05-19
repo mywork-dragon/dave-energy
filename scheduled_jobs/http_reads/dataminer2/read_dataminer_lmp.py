@@ -33,6 +33,9 @@ def run():
 
 
 def get_instance(row_dict):
+    if row_dict["datetime_beginning_ept"] is None:
+        print("Beginning time is empty.")
+        return None
     ts_beginning = datetime.strptime(row_dict["datetime_beginning_ept"], DT_FORMAT)
     is_real_time = False
     price_key_name = "total_lmp_da"
