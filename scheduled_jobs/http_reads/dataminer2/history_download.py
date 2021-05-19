@@ -55,7 +55,7 @@ def download_data(url, filename, start_date, end_date):
 
 
 def run(download_day_ahead):
-    start_date = datetime(2016, 10, 26).date()
+    start_date = datetime(2017, 6, 1).date()
     end_date = datetime.now().date()
     delta = timedelta(days=1)
     curr_start_dt = start_date
@@ -77,14 +77,14 @@ def run(download_day_ahead):
                 print('Error while downloading file for {} to {}'.format(curr_start_dt, curr_end_dt))
                 continue
 
-        if os.path.isfile(csv_filename):
-            fp = open(csv_filename, "r")
-            csv_reader = csv.DictReader(fp)
-            for row in csv_reader:
-                print(row)
-                lmp = get_instance(row)
-                if lmp:
-                    lmp.persist()
+        # if os.path.isfile(csv_filename):
+        #     fp = open(csv_filename, "r")
+        #     csv_reader = csv.DictReader(fp)
+        #     for row in csv_reader:
+        #         print(row)
+        #         lmp = get_instance(row)
+        #         if lmp:
+        #             lmp.persist()
 
         curr_start_dt += delta
 
