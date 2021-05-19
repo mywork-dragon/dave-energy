@@ -5,7 +5,7 @@ from enum import Enum
 from functools import wraps
 from typing import Any, Callable, Optional
 
-from flask import jsonify, request
+from flask import jsonify, request, redirect
 from flask_login import current_user
 
 from common.exceptions import (
@@ -48,7 +48,7 @@ def login_required(function: Callable):  # type: ignore
     @wraps(function)
     def wrapped(*args, **kwargs):  # type: ignore
         if not current_user.is_authenticated:
-            return login_manager.unauthorized(), 401
+            return redirect("/login", code=302)
         return function(*args, **kwargs)
 
     return wrapped
