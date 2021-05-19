@@ -48,7 +48,6 @@ def login_required(function: Callable):  # type: ignore
     @wraps(function)
     def wrapped(*args, **kwargs):  # type: ignore
         if not current_user.is_authenticated:
-            # return login_manager.unauthorized(), 401
             return redirect("/login", code=302)
         return function(*args, **kwargs)
 
