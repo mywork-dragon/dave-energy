@@ -55,7 +55,7 @@ def download_data(url, filename, start_date, end_date):
 
 
 def run(download_day_ahead):
-    start_date = datetime(2017, 6, 1).date()
+    start_date = datetime(2018, 6, 1).date()
     end_date = datetime.now().date()
     delta = timedelta(days=1)
     curr_start_dt = start_date
