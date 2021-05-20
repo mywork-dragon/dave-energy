@@ -15,6 +15,8 @@
                     type: "GET",
                     url: "/tools/supply/goliath_customer_id_and_name",
                     success: function(data){
+
+                        $('.loader-overlay').css("display", "none")
                         idAndNames = data['customers'];
                         $('#customer').append($("<option value=''>Select</option>"));
                         for (var i = 0; i < idAndNames.length; i++) {
@@ -25,6 +27,7 @@
             };
 
             function read_quote() {
+                $('.loader-overlay').css("display", "flex")
                 $('#quote_result').empty();
                 var dict = {};
                 dict["customer_id"] = $("#customer").val();
@@ -34,27 +37,54 @@
                     url: "/tools/supply/get_quote",
                     data : dict,
                     success: function(data){
+                        $('.loader-overlay').css("display", "none")
                         quote = JSON.stringify(data['quote'], null, 2);
-                        $('#quote_result').append($("<p>" + quote + "</p>"));
+                        $('#quote_result').append($("<pre>" + quote + "</pre>"));
                     }
                 });
             };
 
         </script>
 
+        <style>
+            .loader-overlay {
+                width: 100%;
+                height: 100vh;
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: rgba(0, 0, 0, 0.4);
+            }
+
+            .quote-control-elements {
+                padding: 20px 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: 160px;
+            }
+        </style>
 
     <body onload="load_customer_dropdown()">
-        <br><br>
-        <div>
-            <label class='ml-2'>Customer:</label>
-            <select id="customer" onchange="javascript:clear_result();" style="height: 39px;">
-                <option value="">Select</option>
-            </select>
-            <br><br>
-            
-            <button id="submit" type="button" onclick="read_quote()" class="ml-2 btn btn-outline-primary">Submit</button>&nbsp;&nbsp;&nbsp;&nbsp;
-            <br>
-            <hr/>
+        <div class="loader-overlay">
+            <div class="spinner-grow text-white">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div class="quote-control-elements">
+            <div>
+                <label class='ml-2'>Customer:</label>
+                <select id="customer" onchange="javascript:clear_result();" style="height: 39px;">
+                    <option value="">Select</option>
+                </select>
+            </div>
+            <div>
+                <button id="submit" type="button" onclick="read_quote()" class="ml-2 btn btn-outline-primary">Submit</button>
+
+                <hr/>
+            </div>
+
         </div>
 
         <div id='quote_result'>
