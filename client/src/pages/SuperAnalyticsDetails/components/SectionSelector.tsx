@@ -19,23 +19,23 @@ export const SectionSelector: React.FC<Props> = ({ sectionTitle }: Props) => {
   const sections: Section[] = [
     {
       title: SuperAnalyticsTitle.costsAndSavings,
-      path: RoutePaths.superAnalyticsCostsAndSaving,
+      path: RoutePaths.analyticsManagementCostsAndSaving,
     },
     {
       title: SuperAnalyticsTitle.energyDemand,
-      path: RoutePaths.superAnalyticsEnergyDemand,
+      path: RoutePaths.analyticsManagementEnergyDemand,
     },
     {
       title: SuperAnalyticsTitle.energyConsumption,
-      path: RoutePaths.superAnalyticsEnergyConsumption,
+      path: RoutePaths.analyticsManagementEnergyConsumption,
     },
     {
       title: SuperAnalyticsTitle.energyUsagePerCapita,
-      path: RoutePaths.superAnalyticsEnergyUsagePerCapita,
+      path: RoutePaths.analyticsManagementEnergyUsagePerCapita,
     },
     {
       title: SuperAnalyticsTitle.energyCostPerCapita,
-      path: RoutePaths.superAnalyticsEnergyCostPerCapita,
+      path: RoutePaths.analyticsManagementEnergyCostPerCapita,
     },
   ];
 

@@ -15,13 +15,9 @@ from common.exceptions import (
 from flask import session
 
 from common.utils import time_to_utc, get_event_scheduler_order
-from controller.common_routes import (
-    login_required
-)
+from controller.common_routes import login_required
 from controller.analytics_building_engineer import asset_details, solar_details
-from serializers.user_serializers import (
-    energy_annual_data_request_schema
-)
+from serializers.user_serializers import energy_annual_data_request_schema
 from services.billing_service import (
     get_billing_cycle,
     get_billing_information,
@@ -49,13 +45,10 @@ def get_buildings() -> Tuple[Response, int]:
     user = User.query.filter_by(id=current_user.id).first()
     # Return only active buildings
     active_buildings = [bld for bld in user.company.buildings if bld.status == 1]
-    active_buildings.sort(key=lambda bld : bld.address)
+    active_buildings.sort(key=lambda bld: bld.address)
     buildings = []
     for bld in active_buildings:
-        buildings.append({
-            "id": bld.id,
-            "address": bld.address
-        })
+        buildings.append({"id": bld.id, "address": bld.address})
 
     return jsonify(buildings), 200
 
@@ -65,23 +58,23 @@ def get_buildings() -> Tuple[Response, int]:
 def get_display_reports():
     user = User.query.filter_by(id=current_user.id).first()
     resp = {}
-    resp['reports_to_display'] = [] 
+    resp["reports_to_display"] = []
     if user.user_role == 3:
         if user.company.name == "JRS":
-            resp['reports_to_display'] = [
+            resp["reports_to_display"] = [
                 "Control Room",
                 "Analytics-Management",
-                "Sustainability"
+                "Sustainability",
             ]
         else:
-            resp['reports_to_display'] = ["Analytics-Management"]
+            resp["reports_to_display"] = ["Analytics-Management"]
     else:
-        resp['reports_to_display'] = [
+        resp["reports_to_display"] = [
             "Control Room",
-            "Analytics-",
-            "Sustainability"
+            "Analytics-Engineer",
+            "Sustainability",
         ]
-    
+
     return jsonify(resp), 200
 
 

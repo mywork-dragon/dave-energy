@@ -25,6 +25,28 @@ export function loginUser(fields: UserLoginFields, history: any) {
   };
 }
 
+export function logoutUser(history: any) {
+  return function(dispatch: Function) {
+    dispatch({ type: UserActionEnum.USER_LOGOUT });
+    return api
+      .post('/logout')
+      .then(res => {
+        dispatch({
+          type: UserActionEnum.USER_LOGOUT_SUCCESS,
+          payload: res,
+        });
+        history.push('/login');
+      })
+      .catch(err => {
+        dispatch({
+          type: UserActionEnum.USER_LOGOUT_ERROR,
+          payload: err,
+        });
+        dispatch({ type: SHOW_TOAST_NOTIFICATION })
+      });
+  }
+}
+
 export function registerUser(fields: UserRegisterFields, history: any) {
   return function(dispatch: Function) {
     dispatch({ type: UserActionEnum.USER_REGISTER });

@@ -168,7 +168,7 @@ export const SuperAnalyticsComponent = ({
             title='Costs and Savings'
             loading={analyticsCostAndSavingLoading}
             analyticsSuperData={analyticsCostAndSaving}
-            path={RoutePaths.superAnalyticsCostsAndSaving}
+            path={RoutePaths.analyticsManagementCostsAndSaving}
           />
         </LeftBigBlock>
 
@@ -177,7 +177,7 @@ export const SuperAnalyticsComponent = ({
             title='Energy Demand'
             loading={analyticsEnergyDemandLoading}
             analyticsSuperData={analyticsEnergyDemand}
-            path={RoutePaths.superAnalyticsEnergyDemand}
+            path={RoutePaths.analyticsManagementEnergyDemand}
           />
         </div>
 
@@ -192,7 +192,7 @@ export const SuperAnalyticsComponent = ({
             title='Energy Consumption'
             loading={analyticsEnergyConsumptionLoading}
             analyticsSuperData={analyticsEnergyConsumption}
-            path={RoutePaths.superAnalyticsEnergyConsumption}
+            path={RoutePaths.analyticsManagementEnergyConsumption}
           />
         </div>
 
@@ -203,7 +203,7 @@ export const SuperAnalyticsComponent = ({
             title='Energy Usage per capita'
             loading={analyticsEnergyUsagePerCapitaLoading}
             analyticsSuperData={analyticsEnergyUsagePerCapita}
-            path={RoutePaths.superAnalyticsEnergyUsagePerCapita}
+            path={RoutePaths.analyticsManagementEnergyUsagePerCapita}
           />
         </div>
 
@@ -212,7 +212,7 @@ export const SuperAnalyticsComponent = ({
             title='Energy Cost per capita'
             loading={analyticsEnergyCostPerCapitaLoading}
             analyticsSuperData={analyticsEnergyCostPerCapita}
-            path={RoutePaths.superAnalyticsEnergyCostPerCapita}
+            path={RoutePaths.analyticsManagementEnergyCostPerCapita}
           />
         </div>
 

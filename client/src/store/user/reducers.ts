@@ -9,7 +9,6 @@ export function userReducer(
 ): UserState {
   switch (action.type) {
     case UserActionEnum.USER_LOGIN_ERROR:
-      // TODO: Handle specific error codes from the server
       return {
         error: action.payload.error,
       };
@@ -19,6 +18,19 @@ export function userReducer(
       };
     case UserActionEnum.USER_LOGIN_ERROR:
       return {
+        error: action.payload.error,
+      };
+    case UserActionEnum.USER_LOGOUT:
+      return {
+        ...state,
+      };
+    case UserActionEnum.USER_LOGOUT_SUCCESS:
+      return {
+        ...state,
+      };
+    case UserActionEnum.USER_LOGOUT_ERROR:
+      return {
+        ...state,
         error: action.payload.error,
       };
     case UserActionEnum.USER_REGISTER_SUCCESS:

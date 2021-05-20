@@ -42,6 +42,7 @@ import {
 } from './toastNotification';
 
 export interface RootState {
+  admin: any;
   billing: BillingState;
   user: UserState;
   entity: EntityState;
