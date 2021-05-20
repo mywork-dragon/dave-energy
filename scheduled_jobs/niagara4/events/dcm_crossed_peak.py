@@ -37,15 +37,19 @@ class DCMCrossedPeak(ParentEvent):
 
     def create_event(self, building_id: int):
         building = lcl_utils.get_building_details(building_id)
-        latest_four_n4_values = self._get_last_four_n4_value(building_id)
-        if not latest_four_n4_values:
-            logger.info("We don't have enough(atleast 4) N4 values, read for building: {}".format(building_id))
+        latest_n4_value_total = self._get_latest_n4_value(building_id)
+        if not latest_n4_value_total:
+            logger.info(
+                "We have no N4 value, read within the last {} mins for building: {}".format(
+                    events_config.LOOKBACK_THRESHOLD_IN_MINS, building_id
+                )
+            )
             return
 
         logger.info("We have N4 value read within the last {} mins for building: {}, it is: {}".format(
                 events_config.LOOKBACK_THRESHOLD_IN_MINS,
                 building_id,
-                latest_four_n4_values[0],))
+                latest_n4_value_total,))
         # Read the current billing cycle peak
         current_peak_value = utils.get_billing_peak(building_id, datetime.now())
         if not current_peak_value:
@@ -54,14 +58,19 @@ class DCMCrossedPeak(ParentEvent):
             return
 
         logger.info("Current billing cycle peak value for building, {}, is, {}".format(building_id, current_peak_value))
-        if latest_four_n4_values[0] > current_peak_value:
-            logger.info("Latest N4, {} exceeds peak, {}. Writing the event to db.".format(latest_four_n4_values[0],
+        if latest_n4_value_total > current_peak_value:
+            logger.info("Latest N4, {} exceeds peak, {}. Writing the event to db.".format(latest_n4_value_total,
                                                                                           current_peak_value))
             self._create_dcm_event(building_id, building["building_name"],
-                                   latest_four_n4_values[0], current_peak_value,
+                                   latest_n4_value_total, current_peak_value,
                                    datetime.utcnow().replace(tzinfo=pytz.utc),
                                    "Latest N4 read crossed current billing cycle peak.")
             return True
+
+        latest_four_n4_values = self._get_last_four_n4_value(building_id)
+        if not latest_four_n4_values:
+            logger.info("We don't have enough(atleast 4) N4 values, read for building: {}".format(building_id))
+            return
 
         if latest_four_n4_values[0] > (ParentEvent.CLOSE_TO_PEAK_PCT * current_peak_value) and \
             latest_four_n4_values[0] > (latest_four_n4_values[3] + latest_four_n4_values[3]*ParentEvent.RISING_PATTERN_PCT):

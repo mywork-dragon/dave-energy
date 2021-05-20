@@ -4,6 +4,9 @@ export enum UserActionEnum {
   USER_LOGIN = 'USER_LOGIN',
   USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS',
   USER_LOGIN_ERROR = 'USER_LOGIN_ERROR',
+  USER_LOGOUT = 'USER_LOGOUT',
+  USER_LOGOUT_SUCCESS = 'USER_LOGOUT_SUCCESS',
+  USER_LOGOUT_ERROR = 'USER_LOGOUT_ERROR',
   USER_REGISTER = 'USER_REGISTER',
   USER_REGISTER_SUCCESS = 'USER_REGISTER_SUCCESS',
   USER_REGISTER_ERROR = 'USER_REGISTER_ERROR',
@@ -53,6 +56,22 @@ interface UserLoginError {
   };
 }
 
+interface UserLogoutAction {
+  type: typeof UserActionEnum.USER_LOGOUT;
+}
+
+interface UserLogoutSuccess {
+  type: typeof UserActionEnum.USER_LOGOUT_SUCCESS;
+  payload: string;
+}
+
+interface UserLogoutError {
+  type: typeof UserActionEnum.USER_LOGOUT_ERROR;
+  payload: {
+    error: any;
+  };
+}
+
 interface UserRegisterAction {
   type: typeof UserActionEnum.USER_REGISTER;
   payload: UserLoginFields;
@@ -95,6 +114,9 @@ export type UserActionTypes =
   | UserLoginAction
   | UserLoginSuccess
   | UserLoginError
+  | UserLogoutAction
+  | UserLogoutSuccess
+  | UserLogoutError
   | UserRegisterAction
   | UserRegisterSuccess
   | UserRegisterError

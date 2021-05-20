@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { BuildingsDropdown } from './BuildingsDropdown';
 import {
-  Avatar,
   colors,
   DavidEnergyLogo,
   Flex,
@@ -12,12 +12,12 @@ import {
   IconControlRoom,
   IconAnalytics,
   IconSustainability,
-  IconReports,
-  IconNotifications,
+  Title,
 } from 'design-system';
+import { getDisplayReports } from 'store/admin';
+import { logoutUser } from 'store/user';
 import { getBuildings as getBuildingsAction } from 'store/buildings';
 import { RootState } from 'store';
-import { UserRole } from 'models';
 
 interface HeaderProps {
   className?: string;
@@ -30,42 +30,56 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const dispatch = useDispatch();
   const buildings = useSelector((state: RootState) => state.buildings?.buildings);
-  const user = useSelector(({ user }: RootState) => user?.instance);
-  const isManagement = user?.userRole === UserRole.MANAGEMENT;
+  const history = useHistory();
+  const reports = useSelector(({ admin }: RootState) => admin?.reports);
 
   useEffect(() => {
     if (!buildings) {
       dispatch(getBuildingsAction());
     }
-  }, [buildings]);
+    if (!reports.length) {
+      dispatch(getDisplayReports());
+    }
+  }, [buildings, reports]);
 
   return (
-    <HeaderContainer
-      className={className}
-      justifyContent="space-between"
-      isSticky={isSticky}
-    >
-      <Flex alignItems="center">
-        <DavidEnergyLogo css="margin-right: 50px;" />
+    <HeaderContainer className={className} justifyContent='space-between' isSticky={isSticky}>
+      <Flex alignItems='center'>
+        <DavidEnergyLogo css='margin-right: 50px;' />
         <WrappedBuildingsDropdown />
-        {!isManagement && (
-          <WrappedLink icon={<IconControlRoom />} to={'/control-room'}>
-            Control Room
-          </WrappedLink>
-        )}
-        <WrappedLink icon={<IconAnalytics />} to={'/analytics'}>
-          Analytics
-        </WrappedLink>
-        {!isManagement && (
-          <WrappedLink icon={<IconSustainability />} to={'/sustainability'}>
-            Sustainability
-          </WrappedLink>
-        )}
+        {reports.map((report: string, i: number) => {
+          switch (report) {
+            case 'Analytics-Engineer':
+              return (
+                <WrappedLink icon={<IconAnalytics />} to={'/analytics-engineer'} key={i}>
+                  Analytics
+                </WrappedLink>
+              )
+            case 'Analytics-Management':
+              return (
+                <WrappedLink icon={<IconAnalytics />} to={'/analytics-management'} key={i}>
+                  Analytics
+                </WrappedLink>
+              )
+            case 'Control Room':
+              return (
+                <WrappedLink icon={<IconControlRoom />} to={'/control-room'} key={i}>
+                  {report}
+                </WrappedLink>
+              )
+            case 'Sustainability':
+              return (
+                <WrappedLink icon={<IconSustainability />} to={'/sustainability'} key={i}>
+                  {report}
+                </WrappedLink>
+              )
+          }
+        })}
       </Flex>
-      <RightSide alignItems="center">
-        <IconReports css="margin-right: 42px;" />
-        <IconNotifications css="margin-right: 50px;" />
-        <Avatar imgUrl="https://images.unsplash.com/photo-1495568995596-9e40959aa178?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80" />
+      <RightSide alignItems='center'>
+        <Title css={'cursor: pointer;'} onClick={() => dispatch(logoutUser(history))}>
+          Sign Out
+        </Title>
       </RightSide>
     </HeaderContainer>
   );

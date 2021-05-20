@@ -34,26 +34,26 @@ def run(is_real_time):
                 print('Error while downloading file for {} to {}'.format(curr_start_dt, curr_end_dt))
                 continue
 
-        # zones_not_present = set()
-        # if os.path.isfile(csv_filename):
-        #     fp = open(csv_filename, "r")
-        #     csv_reader = csv.DictReader(fp)
-        #     for row in csv_reader:
-        #         lmp = get_lmp_instance(row)
-        #         if lmp:
-        #             lmp.persist()
-        #         else:
-        #             zone_name = row["Zone Name"].lower()
-        #             zones_not_present.add(zone_name)
+        zones_not_present = set()
+        if os.path.isfile(csv_filename):
+            fp = open(csv_filename, "r")
+            csv_reader = csv.DictReader(fp)
+            for row in csv_reader:
+                lmp = get_lmp_instance(row)
+                if lmp:
+                    lmp.persist()
+                else:
+                    zone_name = row["Zone Name"].lower()
+                    zones_not_present.add(zone_name)
 
-        # if zones_not_present:
-        #     print("Zones not present: {}".format(zones_not_present))
+        if zones_not_present:
+            print("Zones not present: {}".format(zones_not_present))
 
         curr_start_dt += delta
 
 
 if __name__ == "__main__":
-    # Real time
-    run(True)
+    # # Real time
+    # run(True)
     # Day Ahead
     run(False)

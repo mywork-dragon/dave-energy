@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router';
 
 import { SessionRoute } from './SessionRoute';
@@ -23,21 +23,20 @@ import {
   BuildingEngineerSolarGenerationPage,
 } from 'pages';
 import { getUser } from 'store/user';
-import { RootState } from 'store';
-import { UserRole } from 'models';
 
 export const RoutePaths = {
-  analytics: '/analytics',
-  annualExport: '/analytics/annual-export',
-  energyConsumptionAnalytics: '/analytics/energy-consumption',
-  energyDemandAnalytics: '/analytics/energy-demand',
-  solarGenerationAnalytics: '/analytics/solar-generation',
-  assetsAnalytics: '/analytics/assets',
-  superAnalyticsCostsAndSaving: '/analytics/super-costs-and-savings',
-  superAnalyticsEnergyDemand: '/analytics/super-energy-demand',
-  superAnalyticsEnergyConsumption: '/analytics/super-energy-consumption',
-  superAnalyticsEnergyUsagePerCapita: '/analytics/super-energy-usage-per-capita',
-  superAnalyticsEnergyCostPerCapita: '/analytics/super-energy-cost-per-capita',
+  analyticsEngineer: '/analytics-engineer',
+  analyticsEngineerAnnualExport: '/analytics-engineer/annual-export',
+  analyticsEngineerAssets: '/analytics-engineer/assets',
+  analyticsEngineerEnergyConsumption: '/analytics-engineer/energy-consumption',
+  analyticsEngineerEnergyDemand: '/analytics-engineer/energy-demand',
+  analyticsEngineerSolarGeneration: '/analytics-engineer/solar-generation',
+  analyticsManagement: '/analytics-management',
+  analyticsManagementCostsAndSaving: '/analytics-management/costs-and-savings',
+  analyticsManagementEnergyConsumption: '/analytics-management/energy-consumption',
+  analyticsManagementEnergyCostPerCapita: '/analytics-management/energy-cost-per-capita',
+  analyticsManagementEnergyDemand: '/analytics-management/energy-demand',
+  analyticsManagementEnergyUsagePerCapita: '/analytics-management/energy-usage-per-capita',
   controlRoom: '/control-room',
   entity: '/entity',
   login: '/login',
@@ -47,76 +46,55 @@ export const RoutePaths = {
 };
 
 export const Routes = () => {
-  const user = useSelector((state: RootState) => state.user?.instance);
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getUser());
   }, [dispatch]);
-
-  const analyticsPageBasedOnUserRole = () => {
-    switch (user?.userRole) {
-      case UserRole.MANAGEMENT:
-        return SuperAnalyticsPage;
-      case UserRole.STANDARD:
-      case UserRole.ADMIN:
-      case UserRole.BUILDING_ENGINEER:
-      default:
-        return AnalyticsPage;
-    }
-  };
 
   return (
     <Switch>
       <Route path={RoutePaths.login} component={LoginPage} />
       <Route path={RoutePaths.register} component={RegisterPage} />
       <SessionRoute
-        path={RoutePaths.annualExport}
+        path={RoutePaths.analyticsEngineerAnnualExport}
         component={BuildingEngineerAnnualExportPage}
       />
       <SessionRoute
-        path={RoutePaths.energyConsumptionAnalytics}
+        path={RoutePaths.analyticsEngineerEnergyConsumption}
         component={BuildingEngineerEnergyConsumptionPage}
       />
       <SessionRoute
-        path={RoutePaths.energyDemandAnalytics}
+        path={RoutePaths.analyticsEngineerEnergyDemand}
         component={BuildingEngineerEnergyDemandPage}
       />
       <SessionRoute
-        path={RoutePaths.solarGenerationAnalytics}
+        path={RoutePaths.analyticsEngineerSolarGeneration}
         component={BuildingEngineerSolarGenerationPage}
       />
-      <SessionRoute path={RoutePaths.assetsAnalytics} component={AssetsPage} />
+      <SessionRoute path={RoutePaths.analyticsEngineerAssets} component={AssetsPage} />
       <SessionRoute
-        path={RoutePaths.superAnalyticsCostsAndSaving}
+        path={RoutePaths.analyticsManagementCostsAndSaving}
         component={SuperCostsAndSavingsPage}
       />
       <SessionRoute
-        path={RoutePaths.superAnalyticsEnergyDemand}
+        path={RoutePaths.analyticsManagementEnergyDemand}
         component={SuperEnergyDemandPage}
       />
       <SessionRoute
-        path={RoutePaths.superAnalyticsEnergyConsumption}
+        path={RoutePaths.analyticsManagementEnergyConsumption}
         component={SuperEnergyConsumptionPage}
       />
       <SessionRoute
-        path={RoutePaths.superAnalyticsEnergyUsagePerCapita}
+        path={RoutePaths.analyticsManagementEnergyUsagePerCapita}
         component={SuperEnergyUsagePerCapitaPage}
       />
       <SessionRoute
-        path={RoutePaths.superAnalyticsEnergyCostPerCapita}
+        path={RoutePaths.analyticsManagementEnergyCostPerCapita}
         component={SuperEnergyCostPerCapitaPage}
       />
-      {/* Root /analytics must be under /analytics/CHILD_ROUTE */}
-      <SessionRoute
-        path={RoutePaths.analytics}
-        component={analyticsPageBasedOnUserRole()}
-      />
-      {/* TODO: Find out how to redirect these if the user doesn't have role
-          UserRole.ADMIN. There aren't any links in the app to route directory
-          so this will work for now.
-      */}
-      <SessionRoute path="/analytics-cfo" component={SuperAnalyticsPage} />
-      <SessionRoute path="/analytics-engineer" component={AnalyticsPage} />
+      <SessionRoute path={RoutePaths.analyticsEngineer} component={AnalyticsPage} />
+      <SessionRoute path={RoutePaths.analyticsManagement} component={SuperAnalyticsPage} />
       <SessionRoute path={RoutePaths.controlRoom} component={ControlRoomPage} />
       <SessionRoute path={RoutePaths.entity} component={EntityPage} />
       <SessionRoute

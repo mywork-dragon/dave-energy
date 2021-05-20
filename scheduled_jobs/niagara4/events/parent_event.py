@@ -23,6 +23,21 @@ class ParentEvent:
     CLOSE_TO_PEAK_PCT = 0.9
     RISING_PATTERN_PCT = 0.9
     
+
+    def _get_latest_n4_value(self, building_id: int) -> Optional[Dict[str, Any]]:
+        _now = datetime.utcnow().replace(tzinfo=pytz.utc)
+        lookback_window_start = _now - timedelta(minutes=events_config.LOOKBACK_THRESHOLD_IN_MINS + 5)
+
+        meter_points = point_utils.get_asset_points(building_id, "Meter", tag="METER")
+        meter_point_ids = [point["point_id"] for point in meter_points]
+
+        bc_demand_data = history_utils.get_summed_point_history(meter_point_ids, lookback_window_start, _now)
+        if bc_demand_data:
+            return bc_demand_data[-1]["quantity"]
+
+        return None
+        
+
     def _create_dcm_event(self, building_id: int, building_name: str,
                           latest_n4_value_total:float, current_peak_value: float,
                           utc_event_start: datetime, event_cause: str):
