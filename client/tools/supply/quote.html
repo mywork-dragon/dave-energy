@@ -44,6 +44,46 @@
                 });
             };
 
+            function get_customer_lead() {
+                $('#customer_lead').empty();
+                let target = document.getElementById("customer");
+                let customer_id = target.value;
+
+                // start of synthetic data, temporary
+
+                let synthetic_data = {"leads":[{"id":1,"name":"Jun-21 start for 23 meters"}, {"id":2,"name":"Jun-23 start for 25 meters"}, {"id":3,"name":"Jun-25 start for 30 meters"}]};
+
+                let idAndNames = synthetic_data['leads']
+
+                for (var i = 0; i < idAndNames.length; i++) {
+                    $('#customer_lead').append($("<option></option>").attr("value", idAndNames[i]['id']).text(idAndNames[i]['name'] + '(' + idAndNames[i]['id'] + ')'));
+                }
+
+                return;
+                // end of synthetic data
+
+
+                if (customer_id) {
+                    $('#customer_lead').empty();
+                    $.ajax({
+                        type: "GET",
+                        url: "/tools/supply/customer_lead_id_and_name?customer_id=" + customer_id,
+                        // url: "/tools/supply/customer_lead_id_and_name?customer_id=1",
+                        // url: "/tools/supply/search_quotes",
+                        
+                        success: function(data){
+                            // $('.loader-overlay').css("display", "none")
+                            idAndNames = data['customers_leads'];
+                            $('#customer').append($("<option value=''>Select</option>"));
+                            for (var i = 0; i < idAndNames.length; i++) {
+                                $('#customer').append($("<option></option>").attr("value", idAndNames[i]['id']).text(idAndNames[i]['name'] + '(' + idAndNames[i]['id'] + ')'));
+                            }
+                        }
+                    });
+                }
+                
+            }
+
         </script>
 
         <style>
@@ -64,6 +104,10 @@
                 justify-content: space-between;
                 height: 160px;
             }
+
+            .quote-selectors {
+                display: flex;
+            }
         </style>
 
     <body onload="load_customer_dropdown()">
@@ -73,11 +117,19 @@
             </div>
         </div>
         <div class="quote-control-elements">
-            <div>
-                <label class='ml-2'>Customer:</label>
-                <select id="customer" onchange="javascript:clear_result();" style="height: 39px;">
-                    <option value="">Select</option>
-                </select>
+            <div class="quote-selectors">
+                <div>
+                    <label class='ml-2'>Customer:</label>
+                    <select id="customer" onchange="javascript:get_customer_lead();" style="height: 39px;">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+                <div>
+                    <label class='ml-2'>Customer Lead:</label>
+                    <select id="customer_lead" style="height: 39px;">
+                        <option value="">Select</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <button id="submit" type="button" onclick="read_quote()" class="ml-2 btn btn-outline-primary">Submit</button>
