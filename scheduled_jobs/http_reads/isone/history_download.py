@@ -7,10 +7,13 @@ from scheduled_jobs.http_reads.isone.read_isone_lmp import get_instance
 
 
 BASE_URL = 'https://www.iso-ne.com/static-transform/csv/histRpts/da-lmp/WW_DALMP_ISO_{}.csv'
+# 'https://www.iso-ne.com/isoexpress/web/reports/pricing/-/tree/lmps-rt-hourly-final'
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
-DOWNLOADED_FILES = f'{BASEDIR}/downloaded_Files'
+DOWNLOAD_DIR = f'{BASEDIR}/downloaded_files'
 
 def download_csv(filepath, url):
+    if os.path.exists(filepath):
+        return
     headers = {
         'User-Agent': 'Mozilla/6.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36'
     }
@@ -24,30 +27,31 @@ def download_csv(filepath, url):
         raise Exception(f"Downloading failed - {response.status_code}")
 
 
-def run():
-    if not os.path.exists(DOWNLOADED_FILES):
-        os.makedirs(DOWNLOADED_FILES)
+def run(is_real_time):
+    download_dir = os.path.join(DOWNLOAD_DIR, "real_time" if is_real_time else "day_ahead")
+    if not os.path.exists(download_dir):
+        os.makedirs(download_dir)
     start_date = datetime(2014, 1, 1).date()
     end_date = datetime.now().date()
     delta = timedelta(days=1)
     while start_date <= end_date:
         plain_date = str(start_date).replace('-', '')
-        filepath = os.path.join(DOWNLOADED_FILES, f'WW_DALMP_ISO_{plain_date}.csv')
+        filepath = os.path.join(download_dir, f'WW_DALMP_ISO_{plain_date}.csv')
         final_url = BASE_URL.format(plain_date)
         if not os.path.isfile(filepath):
             download_csv(filepath, final_url)
         start_date += delta
 
-    persist_to_db()
+    persist_to_db(download_dir)
 
 
-def persist_to_db():
+def persist_to_db(download_dir):
     is_real_time = True
     if "da-lmp" in BASE_URL:
         is_real_time = False
     
-    for csv_file in os.listdir(DOWNLOADED_FILES):
-        csv_file = DOWNLOADED_FILES + "/" + csv_file
+    for csv_file in os.listdir(download_dir):
+        csv_file = download_dir + "/" + csv_file
         fp = open(csv_file, "r")
         # Skip top four rows
         next(fp)
@@ -63,4 +67,5 @@ def persist_to_db():
 
 
 if __name__ == "__main__":
-    run()
+    # Day Ahead
+    run(False)

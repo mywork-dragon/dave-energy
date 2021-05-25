@@ -127,6 +127,7 @@ create table goliath_quote (
     id SERIAL PRIMARY KEY,
     quote JSON NOT NULL,
     customer_id INT REFERENCES customer(id) NOT NULL,
+    customer_lead_id INT REFERENCES customer_lead(id) NOT NULL,
     utc_created timestamptz NOT NULL
 );
 

@@ -26,7 +26,7 @@ def get_instance(row_dicts, is_real_time):
         settlement_price += float(row_dict["Settlement Point Price"])
     settlement_price = round((settlement_price / 4), 2)
     
-    return LMP(dt_delivery, settlement_price, is_real_time, delivery_hr, zone_id, zone_name)
+    return LMP(dt_delivery, settlement_price, is_real_time, int(float(delivery_hr)), zone_id, zone_name)
 
 
 # if __name__ == "__main__":

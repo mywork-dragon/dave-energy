@@ -44,7 +44,11 @@ def get_buildings() -> Tuple[Response, int]:
     """
     user = User.query.filter_by(id=current_user.id).first()
     # Return only active buildings
-    active_buildings = [bld for bld in user.company.buildings if bld.status == 1]
+    if user.email in ["james@davidenergy.com"]:
+        # For demo
+        active_buildings = [bld for bld in Building.query.filter_by(status=1)]
+    else:
+        active_buildings = [bld for bld in user.company.buildings if bld.status == 1]
     active_buildings.sort(key=lambda bld: bld.address)
     buildings = []
     for bld in active_buildings:
@@ -59,7 +63,14 @@ def get_display_reports():
     user = User.query.filter_by(id=current_user.id).first()
     resp = {}
     resp["reports_to_display"] = []
-    if user.user_role == 3:
+    if user.email in ["james@davidenergy.com"]:
+        # For demo
+        resp["reports_to_display"] = [
+                "Control Room",
+                "Analytics-Management",
+                "Sustainability",
+            ]
+    elif user.user_role == 3:
         if user.company.name == "JRS":
             resp["reports_to_display"] = [
                 "Control Room",

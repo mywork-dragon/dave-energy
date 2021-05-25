@@ -156,28 +156,28 @@ export const AnalyticsPage = () => {
           {showAnalytics('energy_demand') && (
             <AnnualAnalyticsCard
               keyofBuildingsState='annualEnergyDemand'
-              link='/analytics/energy-demand'
+              link={RoutePaths.analyticsEngineerEnergyDemand}
               title='Energy Demand'
             />
           )}
           {showAnalytics('energy_consumption') && (
             <AnnualAnalyticsCard
               keyofBuildingsState='annualEnergyConsumption'
-              link='/analytics/energy-consumption'
+              link={RoutePaths.analyticsEngineerEnergyConsumption}
               title='Energy Consumption'
             />
           )}
           {showAnalytics('solar') && (
             <AnnualAnalyticsCard
               keyofBuildingsState='annualSolarGeneration'
-              link='/analytics/solar-generation'
+              link={RoutePaths.analyticsEngineerSolarGeneration}
               title='Solar Generation'
             />
           )}
           {showAnalytics('export') && (
             <AnnualAnalyticsCard
               keyofBuildingsState='annualExport'
-              link='/analytics/annual-export'
+              link={RoutePaths.analyticsEngineerAnnualExport}
               title='Annual Export'
             />
           )}
@@ -189,7 +189,7 @@ export const AnalyticsPage = () => {
               <Title>Assets</Title>
               <LastBilling>Last Billing</LastBilling>
             </Flex>
-            <a href={RoutePaths.assetsAnalytics} target='_blank' rel='noopener noreferrer'>
+            <a href={RoutePaths.analyticsEngineerAssets} target='_blank' rel='noopener noreferrer'>
               <IconArrowRight
                 color={colors.blue}
                 css={`padding: 4px; margin: -4px; cursor: pointer;`}
